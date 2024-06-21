@@ -24,7 +24,7 @@ module.exports = {
         endDate: '2024-11-31'
       },
       {
-        spotId: 1,
+        spotId: 2,
         userId: 4,
         startDate: '2025-05-24',
         endDate: '2025-05-26'
@@ -36,7 +36,7 @@ module.exports = {
         endDate: '2024-06-03'
       },
       {
-        spotId: 5,
+        spotId: 3,
         userId: 6,
         startDate: '2024-06-10',
         endDate: '2024-06-20'
@@ -54,7 +54,7 @@ module.exports = {
         endDate: '2026-03-03'
       },
       {
-        spotId: 5,
+        spotId: 9,
         userId: 5,
         startDate: '3000-05-01',
         endDate: '3000-06-20'
@@ -78,7 +78,7 @@ module.exports = {
         endDate: '2024-07-29'
       },
       {
-        spotId: 11,
+        spotId: 8,
         userId: 6,
         startDate: '2000-12-25',
         endDate: '2000-12-27'
@@ -89,42 +89,6 @@ module.exports = {
         startDate: '2024-06-25',
         endDate: '2024-06-27'
       },
-      {
-        spotId: 13,
-        userId: 4,
-        startDate: '2024-06-25',
-        endDate: '2024-06-27'
-      },
-      {
-        spotId: 13,
-        userId: 5,
-        startDate: '2024-03-01',
-        endDate: '2024-03-10'
-      },
-      {
-        spotId: 16,
-        userId: 6,
-        startDate: '2024-04-01',
-        endDate: '2024-04-10'
-      },
-      {
-        spotId: 16,
-        userId: 2,
-        startDate: '2024-10-10',
-        endDate: '2024-10-11'
-      },
-      {
-        spotId: 16,
-        userId: 1,
-        startDate: '2024-11-11',
-        endDate: '2024-11-31'
-      },
-      {
-        spotId: 20,
-        userId: 3,
-        startDate: '2024-05-17',
-        endDate: '2024-05-20'
-      }
     ], { validate: true });
   },
 
@@ -132,7 +96,7 @@ module.exports = {
     options.tableName = "Bookings";
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      spotId: { [Op.in]: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] }
+      spotId: { [Op.in]: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }
     }, {});
   }
 };
