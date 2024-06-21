@@ -2,7 +2,7 @@
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
+  options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
 module.exports = {
@@ -19,6 +19,11 @@ module.exports = {
         allowNull: false,
         unique: true
       },
+      email: {
+        type: Sequelize.STRING(256),
+        allowNull: false,
+        unique: true
+      },
       firstName: {
         type: Sequelize.STRING,
         allowNull: false
@@ -26,11 +31,6 @@ module.exports = {
       lastName: {
         type: Sequelize.STRING,
         allowNull: false
-      },
-      email: {
-        type: Sequelize.STRING(256),
-        allowNull: false,
-        unique: true
       },
       hashedPassword: {
         type: Sequelize.STRING.BINARY,
@@ -48,7 +48,6 @@ module.exports = {
       }
     }, options);
   },
-
   async down(queryInterface, Sequelize) {
     options.tableName = "Users";
     return queryInterface.dropTable(options);
