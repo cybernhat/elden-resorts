@@ -22,8 +22,6 @@ module.exports = {
         name: "Cozy Apartment in SF",
         description: "A cozy one-bedroom apartment in the heart of San Francisco.",
         price: 150.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 1,
@@ -36,8 +34,6 @@ module.exports = {
         name: "Stylish Apartment in Seattle",
         description: "A stylish apartment in downtown Seattle.",
         price: 180.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 2,
@@ -50,8 +46,6 @@ module.exports = {
         name: "Modern Loft in NYC",
         description: "A modern loft with stunning city views.",
         price: 550.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 2,
@@ -64,8 +58,6 @@ module.exports = {
         name: "Eclectic Home in Austin",
         description: "An eclectic home with a unique charm.",
         price: 320.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 3,
@@ -78,8 +70,6 @@ module.exports = {
         name: "Charming Bungalow in Chicago",
         description: "A charming bungalow perfect for a weekend getaway.",
         price: 130.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 3,
@@ -92,8 +82,6 @@ module.exports = {
         name: "Mountain Retreat in Denver",
         description: "A cozy retreat near the mountains.",
         price: 200.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 4,
@@ -106,8 +94,6 @@ module.exports = {
         name: "Luxury Condo in LA",
         description: "A luxurious condo with a beautiful city view.",
         price: 300.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 4,
@@ -120,8 +106,6 @@ module.exports = {
         name: "Chic Studio in Portland",
         description: "A chic studio apartment in the trendy district.",
         price: 60.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 5,
@@ -134,8 +118,6 @@ module.exports = {
         name: "Beachfront Villa in Miami",
         description: "A luxurious beachfront villa with stunning ocean views.",
         price: 400.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 5,
@@ -148,8 +130,6 @@ module.exports = {
         name: "Luxury Mansion in LA",
         description: "A luxurious mansion with panoramic views of Los Angeles.",
         price: 1200.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 6,
@@ -162,8 +142,6 @@ module.exports = {
         name: "Cliffhouse in Newport Beach",
         description: "A beautiful cliffhouse overlooing the bay.",
         price: 700.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
       },
       {
         ownerId: 6,
@@ -175,10 +153,7 @@ module.exports = {
         lng: -118.4965,
         name: "A seeder spot where I live",
         description: "This is a fake spot that you should book.",
-        price: 100.00,
-        previewImage: "https://images.app.goo.gl/e2Q6ELh75e97dxHU61",
-        avgRating: null
-      }
+        price: 100.00,      }
     ], { validate: true });
   },
 
