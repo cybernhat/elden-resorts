@@ -375,9 +375,77 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     }
 })
 
-router.post('/:spotId/bookings', requireAuth, (req, res, next) => {
-    
-})
+router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
+    const { spotId } = req.params;
+    const { startDate, endDate } = req.body;
+    const { user } = req;
+    const currDate = new Date();
+
+    const spot = await Spot.findAll({
+        where: {
+            id: spotId
+        }
+    });
+
+    if (!spot) {
+        res.status(404).json({
+            message: "Spot couldn't be found"
+        })
+    }
+
+    // error 400 date conflicts
+    const booking = await Booking.findAll({
+        where: {
+            spotId: spotId
+        }
+    })
+
+    let bookingErrors = {};
+
+     for (let key in booking) {
+        if (new Date(startDate) >= new Date(booking[key].startDate) &&
+            new Date(startDate) <= new Date(booking[key].endDate)) {
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
+
+        }
+        if (new Date(endDate) >= new Date(booking[key].startDate) &&
+             new Date(endDate) <= new Date(booking[key].endDate)) {
+            bookingErrors.endDate = "End date conflicts with an existing booking";
+        }
+    }
+
+    if (Object.keys(bookingErrors).length > 0) {
+        res.status(403);
+        return res.json({
+        "message": "Sorry, this spot is already booked for the specified dates",
+        bookingErrors
+        });
+     }
+
+    const dateErrors = {};
+    if (new Date(startDate) < currDate) dateErrors.startDate = "startDate cannot be in the past"
+    if (new Date(endDate) <= startDate) dateErrors.endDate = "endDate cannot be on or before startDate"
+
+    if (Object.keys(dateErrors).length > 0) {
+        res.status(400);
+        return res.json({
+            message: "Bad Request",
+            dateErrors
+        })
+    }
+
+    // make new booking
+    const newBooking = await Booking.create({
+        spotId: parseInt(spotId),
+        userId: user.id,
+        startDate,
+        endDate
+
+    });
+
+    res.json(newBooking)
+});
+
 
 
 module.exports = router;
