@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Spot, Review, SpotImage, ReviewImage, User, Sequelize } = require('../../db/models');
+const { Spot, Review, SpotImage, ReviewImage, User, Booking, Sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 router.get("/", async (req, res, next) => {
@@ -324,7 +324,7 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
             message: "User already has a review for this spot"
         })
     }
-    
+
     const newReview = await Review.create({
         userId: reviewUser.id,
         spotId: parseInt(spotId),
@@ -334,4 +334,50 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
 
     res.json(newReview)
 })
+
+router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
+    const { spotId } = req.params;
+    const { user } = req
+    const spot = await Spot.findByPk(spotId);
+
+    if (!spot) {
+        res.status(404).json({
+            message: "Spot couldn't be found"
+        })
+    }
+
+    if (spot.ownerId !== user.id) {
+        const bookings = await Booking.findAll({
+            where: {
+                spotId
+            },
+            attributes: ['spotId', 'startDate', 'endDate']
+        })
+
+        res.json(bookings);
+    } else if (spot.ownerId === user.id) {
+        const bookings = await Booking.findAll({
+            where: {
+                spotId
+            },
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName']
+                }
+            ],
+            attributes: ['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt']
+        })
+
+        res.json({
+            Bookings: bookings
+        })
+    }
+})
+
+router.post('/:spotId/bookings', requireAuth, (req, res, next) => {
+    
+})
+
+
 module.exports = router;

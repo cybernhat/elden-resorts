@@ -2,8 +2,6 @@ const router = require("express").Router();
 const { Spot, Review, SpotImage, User, ReviewImage, Sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
-
-
 router.get('/current', requireAuth, async (req, res, next) => {
     const { user } = req
 
