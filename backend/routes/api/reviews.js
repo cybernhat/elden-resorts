@@ -46,7 +46,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     const review = await Review.findByPk(reviewId)
 
     if (!review) {
-        res.status(404).json({
+        return res.status(404).json({
             message: "Review couldn't be found"
         })
     }
@@ -58,7 +58,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     })
 
     if (reviewImages.length >= 10) {
-        res.status(403).json({
+        return res.status(403).json({
             message: "Maximum number of images for this resource was reached"
         })
     }
@@ -85,7 +85,7 @@ router.put('/:reviewId', requireAuth, async (req, res, next) => {
     const reviewToUpdate = await Review.findByPk(reviewId);
 
     if (!reviewToUpdate) {
-        res.status(404).json({
+        return res.status(404).json({
             message: "Review couldn't be found"
         })
     }
@@ -115,7 +115,7 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
     const reviewToDestroy = await Review.findByPk(reviewId);
 
     if (!reviewToDestroy) {
-        res.status(404).json({
+        return res.status(404).json({
             message: "Review couldn't be found"
         })
     }

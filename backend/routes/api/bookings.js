@@ -63,7 +63,8 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
   const booking = await Booking.findByPk(bookingId)
 
   if (!booking) {
-    res.status(404).json({
+    res.status(404)
+    return res.json({
         message: "Booking couldn't be found"
     })
   };

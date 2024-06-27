@@ -3,6 +3,56 @@ const { Spot, Review, SpotImage, ReviewImage, User, Booking, Sequelize } = requi
 const { requireAuth } = require('../../utils/auth');
 
 router.get("/", async (req, res, next) => {
+    const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query;
+
+    const pageNum = parseInt(page);
+    const pageSize = parseInt(size);
+
+    const offset = (pageNum - 1) * pageSize;
+    const limit = pageSize;
+
+    const errors = {};
+    if (isNaN(pageNum) || pageNum < 1) {
+        errors.page = "Page must be greater than or equal to 1";
+    }
+    if (isNaN(pageSize) || pageSize < 1) {
+        errors.size = "Size must be greater than or equal to 1";
+    }
+    if (minLat !== undefined && isNaN(parseInt(minLat))) {
+        errors.minLat = "Minimum latitude is invalid";
+    }
+    if (maxLat !== undefined && isNaN(parseInt(maxLat))) {
+        errors.maxLat = "Maximum latitude is invalid";
+    }
+    if (minLng !== undefined && isNaN(parseInt(minLng))) {
+        errors.minLng = "Minimum longitude is invalid";
+    }
+    if (maxLng !== undefined && isNaN(parseInt(maxLng))) {
+        errors.maxLng = "Maximum longitude is invalid";
+    }
+    if (minPrice !== undefined && (isNaN(parseInt(minPrice)) || parseInt(minPrice) < 0)) {
+        errors.minPrice = "Minimum price must be greater than or equal to 0";
+    }
+    if (maxPrice !== undefined && (isNaN(parse(maxPrice)) || parseInt(maxPrice) < 0)) {
+        errors.maxPrice = "Maximum price must be greater than or equal to 0";
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return res.status(400).json({
+            message: "Bad Request",
+            errors
+        });
+    }
+
+    const where = {};
+
+    if (minLat) where.lat = { [Op.gte]: parseInt(minLat) };
+    if (maxLat) where.lat = { ...where.lat, [Op.lte]: parseInt(maxLat) };
+    if (minLng) where.lng = { [Op.gte]: parseInt(minLng) };
+    if (maxLng) where.lng = { ...where.lng, [Op.lte]: parseInt(maxLng) };
+    if (minPrice) where.price = { [Op.gte]: parseInt(minPrice) };
+    if (maxPrice) where.price = { ...where.price, [Op.lte]: parseInt(maxPrice) };
+
     const spots = await Spot.findAll({
       attributes: {
         include: [
@@ -13,6 +63,7 @@ router.get("/", async (req, res, next) => {
         {
           model: Review,
           attributes: [],
+          duplicating: false
         },
         {
           model: SpotImage,
@@ -20,10 +71,15 @@ router.get("/", async (req, res, next) => {
           where: { preview: true },
           required: false,
           as: "previewImage",
+          duplicating: false
         },
     ],
         group: ["Spot.id", "previewImage.id"],
+        where,
+        limit,
+        offset
     });
+
 
     const flatten = spots.map(spot => {
         return {
@@ -32,7 +88,11 @@ router.get("/", async (req, res, next) => {
         }
     })
 
-    res.json({ Spots: flatten });
+    res.json({
+        Spots: flatten,
+        page: page,
+        size: size
+     });
   });
 
 router.get("/current", requireAuth, async (req, res, next) => {
@@ -158,7 +218,7 @@ router.post("/", requireAuth, async (req, res, next) => {
         price
     })
 
-    res.status(201).json({...newSpot.dataValues})
+    res.status(201).json(newSpot)
 
 });
 
@@ -173,16 +233,12 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
     }
 
     const newImage = await SpotImage.create({
+        spotId: parseInt(spot.id),
         url,
-        preview,
-        spotId: spot.id
+        preview
     });
 
-    const createdImage = await SpotImage.findByPk(newImage.id,{
-        attributes: ["id", "url", "preview"]
-    });
-
-    res.json({createdImage})
+    res.json(newImage);
 });
 
 router.put("/:spotId", requireAuth, async (req, res, next) => {
@@ -240,21 +296,6 @@ router.put("/:spotId", requireAuth, async (req, res, next) => {
     res.json(spotToUpdate);
 })
 
-router.delete('/:spotId', requireAuth, async (req, res, next) => {
-    const { spotId } = req.params;
-
-    const spotToDestroy = await Spot.findByPk(spotId);
-
-    if (!spotToDestroy) {
-        return res.status(404).json({ message: "Spot couldn't be found"});
-    }
-
-    await spotToDestroy.destroy()
-
-    res.status(200).json({
-        message: "Successfully deleted"
-    });
-});
 
 router.get('/:spotId/reviews', async (req, res, next) => {
     const { spotId } = req.params;
@@ -262,7 +303,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
     const spot = await Spot.findByPk(spotId)
 
     if (!spot) {
-        res.status(404).json({
+        return res.status(404).json({
             message: "Spot couldn't be found"
         })
     }
@@ -297,42 +338,40 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
     if (Object.keys(errors).length > 0) {
         res.status(400);
         return res.json({
-          "message": "Bad Request",
-          errors
+            "message": "Bad Request",
+            errors
         });
     }
 
-    const spot = await Spot.findByPk(spotId)
+    const spot = await Spot.findByPk(spotId);
 
     if (!spot) {
-        res.status(404).json({
+        return res.status(404).json({
             message: "Spot couldn't be found"
         })
     }
-    const reviewUser = await User.findByPk(user.id, {
-        attributes: ["id"]
-    })
 
     const existingReview = await Review.findOne({
         where: {
-            userId: reviewUser.id
+            userId: user.id,
+            spotId
         }
     })
 
     if (existingReview) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "User already has a review for this spot"
         })
     }
 
     const newReview = await Review.create({
-        userId: reviewUser.id,
+        userId: parseInt(user.id),
         spotId: parseInt(spotId),
         review,
         stars
     })
 
-    res.json(newReview)
+    res.status(201).json(newReview)
 })
 
 router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
@@ -341,7 +380,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const spot = await Spot.findByPk(spotId);
 
     if (!spot) {
-        res.status(404).json({
+        return res.status(404).json({
             message: "Spot couldn't be found"
         })
     }
@@ -388,7 +427,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     });
 
     if (!spot) {
-        res.status(404).json({
+        return res.status(404).json({
             message: "Spot couldn't be found"
         })
     }
@@ -402,14 +441,14 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     let bookingErrors = {};
 
-     for (let key in booking) {
+    for (let key in booking) {
         if (new Date(startDate) >= new Date(booking[key].startDate) &&
             new Date(startDate) <= new Date(booking[key].endDate)) {
-            bookingErrors.startDate = "Start date conflicts with an existing booking";
+                bookingErrors.startDate = "Start date conflicts with an existing booking";
 
         }
         if (new Date(endDate) >= new Date(booking[key].startDate) &&
-             new Date(endDate) <= new Date(booking[key].endDate)) {
+        new Date(endDate) <= new Date(booking[key].endDate)) {
             bookingErrors.endDate = "End date conflicts with an existing booking";
         }
     }
@@ -417,10 +456,10 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     if (Object.keys(bookingErrors).length > 0) {
         res.status(403);
         return res.json({
-        "message": "Sorry, this spot is already booked for the specified dates",
-        bookingErrors
+            "message": "Sorry, this spot is already booked for the specified dates",
+            bookingErrors
         });
-     }
+    }
 
     const dateErrors = {};
     if (new Date(startDate) < currDate) dateErrors.startDate = "startDate cannot be in the past"
@@ -436,7 +475,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     // make new booking
     const newBooking = await Booking.create({
-        spotId: parseInt(spotId),
+        spotId: spotId,
         userId: user.id,
         startDate,
         endDate
@@ -446,6 +485,20 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     res.json(newBooking)
 });
 
+router.delete('/:spotId', requireAuth, async (req, res, next) => {
+    const { spotId } = req.params;
 
+    const spotToDestroy = await Spot.findByPk(spotId);
+
+    if (!spotToDestroy) {
+        return res.status(404).json({ message: "Spot couldn't be found"});
+    }
+
+    await spotToDestroy.destroy()
+
+    res.status(200).json({
+        message: "Successfully deleted"
+    });
+});
 
 module.exports = router;
