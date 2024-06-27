@@ -5,8 +5,8 @@ const { requireAuth } = require('../../utils/auth');
 router.get("/", async (req, res, next) => {
     const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query;
 
-    const pageNum = parseInt(page);
-    const pageSize = parseInt(size);
+    const pageNum = parseInt(page) || 1;
+    const pageSize = parseInt(size) || 20;
 
     const offset = (pageNum - 1) * pageSize;
     const limit = pageSize;
@@ -225,8 +225,15 @@ router.post("/", requireAuth, async (req, res, next) => {
 router.post("/:spotId/images", requireAuth, async (req, res, next) => {
     const { url, preview} = req.body;
     const { spotId } = req.params;
+    const { user } = req
 
     const spot = await Spot.findByPk(spotId);
+
+    if (spot.ownerId !== user.id) {
+        return res.status(403).json({
+            message: "Forbidden"
+        })
+    }
 
     if (!spot) {
         return res.status(404).json({ message: "Spot couldn't be found" });
@@ -242,6 +249,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 });
 
 router.put("/:spotId", requireAuth, async (req, res, next) => {
+    const { user } = req
     const {
         address,
         city,
@@ -257,6 +265,12 @@ router.put("/:spotId", requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
 
     const spotToUpdate = await Spot.findByPk(spotId);
+
+    if (spotToUpdate.ownerId !== user.id) {
+        return res.status(403).json({
+            message: "Forbidden"
+        })
+    }
 
     let errors = {};
     if (!address) errors.address = "Street address is required";
@@ -486,9 +500,14 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 });
 
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
+    const { user } = req
     const { spotId } = req.params;
 
     const spotToDestroy = await Spot.findByPk(spotId);
+
+    if (spotToDestroy.ownerId !== user.id) {
+        return res.status(403).json({ message: "Forbidden"});
+    }
 
     if (!spotToDestroy) {
         return res.status(404).json({ message: "Spot couldn't be found"});

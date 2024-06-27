@@ -34,8 +34,29 @@ router.get('/current', requireAuth, async (req, res, next) => {
         ]
     });
 
+    const formattedReview = reviews.map(review => {
+        let jsonReview = review.toJSON();
+
+        if (jsonReview.Spot) {
+            const jsonSpot = jsonReview.Spot
+
+            let previewImage = null;
+
+            if (jsonSpot.previewImage && jsonSpot.previewImage.length > 0) {
+                previewImage = jsonSpot.previewImage[0].url
+            }
+
+            jsonReview.Spot = {
+                ...jsonSpot,
+                previewImage
+            }
+            delete jsonReview.Spot.SpotImage
+        }
+        return jsonReview;
+    })
+
     res.json( {
-        Reviews: reviews
+        Reviews: formattedReview
     })
 })
 
