@@ -2,6 +2,19 @@ const router = require("express").Router();
 const { Booking, Spot, User, Review, SpotImage, Sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
+const dateTransformer = date => {
+  let transformedDate = ``
+
+  let year = date.getFullYear();
+  let month = date.getMonth();
+  let day = date.getDate();
+  let hour = date.getHours();
+  let minute = date.getMinutes();
+  let second = date.getSeconds();
+
+  return transformedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`
+}
+
 router.get("/current", requireAuth, async (req, res, next) => {
     const { user } = req;
     const Bookings = await Booking.findAll({
@@ -49,6 +62,12 @@ router.get("/current", requireAuth, async (req, res, next) => {
         bookingJson.Spot = { ...spotJson, previewImage: previewImage };
         delete bookingJson.Spot.SpotImages;
       }
+
+      bookingJson.startDate = dateTransformer(bookingJson.startDate);
+      bookingJson.endDate = dateTransformer(bookingJson.endDate);
+      bookingJson.createdAt = dateTransformer(bookingJson.createdAt);
+      bookingJson.updatedAt = dateTransformer(bookingJson.updatedAt)
+
       return bookingJson;
     });
 
@@ -112,7 +131,15 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
           })
        }
 
-  res.json(booking);
+  res.json({
+    id: booking.id,
+    spotId: booking.spotId,
+    userId: booking.userId,
+    startDate: dateTransformer(booking.startDate),
+    endDate: dateTransformer(booking.endDate),
+    createdAt: dateTransformer(booking.createdAt),
+    updatedAt: dateTransformer(booking.updatedAt)
+  });
 })
 
 

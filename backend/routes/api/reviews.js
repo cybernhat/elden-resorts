@@ -1,6 +1,20 @@
 const router = require("express").Router();
+const { DataTypes } = require("sequelize");
 const { Spot, Review, SpotImage, User, ReviewImage, Sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+
+const dateTransformer = date => {
+    let transformedDate = ``
+
+    let year = date.getFullYear();
+    let month = date.getMonth();
+    let day = date.getDate();
+    let hour = date.getHours();
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+
+    return transformedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`
+}
 
 router.get('/current', requireAuth, async (req, res, next) => {
     const { user } = req
@@ -50,7 +64,11 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 ...jsonSpot,
                 previewImage
             }
+
             delete jsonReview.Spot.SpotImage
+
+            jsonReview.createdAt = dateTransformer(jsonReview.createdAt)
+            jsonReview.updatedAt = dateTransformer(jsonReview.updatedAt)
         }
         return jsonReview;
     })
@@ -127,7 +145,15 @@ router.put('/:reviewId', requireAuth, async (req, res, next) => {
 
     await reviewToUpdate.save();
 
-    res.json(reviewToUpdate)
+    res.json({
+        id: reviewToUpdate.id,
+        userId: reviewToUpdate.userId,
+        spotId: reviewToUpdate.spotId,
+        review: reviewToUpdate.review,
+        stars: reviewToUpdate.stars,
+        createdAt: dateTransformer(reviewToUpdate.createdAt),
+        updatedAt: dateTransformer(reviewToUpdate.updatedAt)
+    })
 })
 
 router.delete('/:reviewId', requireAuth, async (req, res, next) => {

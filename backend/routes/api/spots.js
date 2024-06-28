@@ -2,6 +2,19 @@ const router = require("express").Router();
 const { Spot, Review, SpotImage, ReviewImage, User, Booking, Sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
+const dateTransformer = date => {
+    let transformedDate = ``
+
+    let year = date.getFullYear();
+    let month = date.getMonth();
+    let day = date.getDate();
+    let hour = date.getHours();
+    let minute = date.getMinutes();
+    let second = date.getSeconds();
+
+    return transformedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`
+  }
+
 router.get("/", async (req, res, next) => {
     const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query;
 
@@ -82,8 +95,13 @@ router.get("/", async (req, res, next) => {
 
 
     const flatten = spots.map(spot => {
+        const jsonSpot = spot.toJSON();
+
+        jsonSpot.createdAt = dateTransformer(jsonSpot.createdAt);
+        jsonSpot.updatedAt = dateTransformer(jsonSpot.updatedAt);
+
         return {
-            ...spot.toJSON(),
+            ...jsonSpot,
             previewImage: spot.toJSON().previewImage[0]?.url
         }
     })
@@ -122,7 +140,19 @@ router.get("/current", requireAuth, async (req, res, next) => {
         ]
     })
 
-    res.json({Spots: allSpots});
+    const flatten = allSpots.map(spot => {
+        const jsonSpot = spot.toJSON();
+
+        jsonSpot.createdAt = dateTransformer(jsonSpot.createdAt);
+        jsonSpot.updatedAt = dateTransformer(jsonSpot.updatedAt);
+
+        return {
+            ...jsonSpot,
+            previewImage: spot.toJSON().previewImage[0]?.url
+        }
+    })
+
+    res.json({Spots: flatten});
 });
 
 router.get("/:spotId", async (req, res, next) => {
@@ -166,6 +196,9 @@ router.get("/:spotId", async (req, res, next) => {
     if (!spot) {
         return res.status(404).json({ message: "Spot couldn't be found" });
     }
+    spot.createdAt = dateTransformer(spot.createdAt);
+    spot.updatedAt = dateTransformer(spot.updatedAt);
+    await spot.save();
 
     res.json(spot);
 })
@@ -218,7 +251,21 @@ router.post("/", requireAuth, async (req, res, next) => {
         price
     })
 
-    res.status(201).json(newSpot)
+    res.status(201).json({
+        id: newSpot.id,
+        ownerId: newSpot.ownerId,
+        address: newSpot.address,
+        city: newSpot.city,
+        state: newSpot.state,
+        country: newSpot.country,
+        lat: newSpot.lat,
+        lng: newSpot.lng,
+        name: newSpot.name,
+        description: newSpot.description,
+        price: newSpot.price,
+        createdAt: dateTransformer(newSpot.createdAt),
+        updatedAt: dateTransformer(newSpot.updatedAt)
+    })
 
 });
 
@@ -307,7 +354,21 @@ router.put("/:spotId", requireAuth, async (req, res, next) => {
 
     await spotToUpdate.save();
 
-    res.json(spotToUpdate);
+    res.json({
+        id: spotToUpdate.id,
+        ownerId: spotToUpdate.ownerId,
+        address: spotToUpdate.address,
+        city: spotToUpdate.city,
+        state: spotToUpdate.state,
+        country: spotToUpdate.country,
+        lat: spotToUpdate.lat,
+        lng: spotToUpdate.lng,
+        name: spotToUpdate.name,
+        description: spotToUpdate.description,
+        price: spotToUpdate.price,
+        createdAt: dateTransformer(spotToUpdate.createdAt),
+        updatedAt: dateTransformer(spotToUpdate.updatedAt)
+    });
 })
 
 
@@ -321,7 +382,7 @@ router.get('/:spotId/reviews', async (req, res, next) => {
             message: "Spot couldn't be found"
         })
     }
-    const review = await Review.findAll({
+    const reviews = await Review.findAll({
         where: {
             spotId: spot.id
         },
@@ -337,7 +398,17 @@ router.get('/:spotId/reviews', async (req, res, next) => {
         ]
     })
 
-    res.json(review)
+    const updatedDate = reviews.map(review => {
+        const jsonReview = review.toJSON();
+
+        jsonReview.createdAt = dateTransformer(jsonReview.createdAt);
+        jsonReview.updatedAt = dateTransformer(jsonReview.updatedAt);
+
+        return {
+            ...jsonReview
+        }
+    })
+    res.json(updatedDate)
 })
 
 router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
@@ -385,7 +456,15 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
         stars
     })
 
-    res.status(201).json(newReview)
+    res.status(201).json({
+        id: newReview.id,
+        userId: newReview.userId,
+        spotId: newReview.spotId,
+        review: newReview.review,
+        stars: newReview.stars,
+        createdAt: dateTransformer(newReview.createdAt),
+        updatedAt: dateTransformer(newReview.updatedAt)
+    })
 })
 
 router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
@@ -407,7 +486,19 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
             attributes: ['spotId', 'startDate', 'endDate']
         })
 
-        res.json(bookings);
+        const updatedDate = bookings.map(booking => {
+            const jsonBooking = booking.toJSON();
+
+            jsonBooking.startDate = dateTransformer(jsonBooking.startDate);
+            jsonBooking.endDate = dateTransformer(jsonBooking.endDate)
+
+            return {
+                Bookings: {
+                    ...jsonBooking
+                }
+            }
+        })
+        res.json(...updatedDate);
     } else if (spot.ownerId === user.id) {
         const bookings = await Booking.findAll({
             where: {
@@ -422,10 +513,26 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
             attributes: ['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt']
         })
 
+        const updatedDate = bookings.map(booking => {
+            const jsonBooking = booking.toJSON();
+
+            jsonBooking.startDate = dateTransformer(jsonBooking.startDate);
+            jsonBooking.endDate = dateTransformer(jsonBooking.endDate);
+            jsonBooking.createdAt = dateTransformer(jsonBooking.createdAt);
+            jsonBooking.updatedAt = dateTransformer(jsonBooking.updatedAt)
+
+            return {
+                Bookings: {
+                    ...jsonBooking
+                }
+            }
+        })
+
         res.json({
-            Bookings: bookings
+            ...updatedDate
         })
     }
+
 })
 
 router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
@@ -496,7 +603,15 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     });
 
-    res.json(newBooking)
+    res.json({
+        id: newBooking.id,
+        spotId: newBooking.spotId,
+        userId: newBooking.userId,
+        startDate: dateTransformer(newBooking.startDate),
+        endDate: dateTransformer (newBooking.endDate),
+        createdAt: dateTransformer(newBooking.createdAt),
+        updatedAt: dateTransformer(newBooking.updatedAt)
+    })
 });
 
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
