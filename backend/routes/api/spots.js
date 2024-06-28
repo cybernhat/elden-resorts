@@ -159,26 +159,37 @@ router.get("/:spotId", async (req, res, next) => {
     const { spotId } = req.params;
 
     const spot = await Spot.findByPk(spotId, {
-        attributes: {
-            include: [
-                [
-                    Sequelize.literal(`(
-                        SELECT COUNT(*)
-                        FROM "Reviews"
-                        WHERE "Reviews"."spotId" = "Spot"."id"
-                    )`),
-                    'numReviews'
-                ],
-                [
-                    Sequelize.literal(`(
-                        SELECT AVG("stars")
-                        FROM "Reviews"
-                        WHERE "Reviews"."spotId" = "Spot"."id"
-                    )`),
-                    'avgStarRating'
-                ],
+        attributes: [
+            'id',
+            'ownerId',
+            'address',
+            'city',
+            'state',
+            'country',
+            'lat',
+            'lng',
+            'name',
+            'description',
+            'price',
+            'createdAt',
+            'updatedAt',
+            [
+                Sequelize.literal(`(
+                    SELECT COUNT(*)
+                    FROM "Reviews"
+                    WHERE "Reviews"."spotId" = "Spot"."id"
+                )`),
+                'numReviews'
             ],
-        },
+            [
+                Sequelize.literal(`(
+                    SELECT AVG("stars")
+                    FROM "Reviews"
+                    WHERE "Reviews"."spotId" = "Spot"."id"
+                )`),
+                'avgStarRating'
+            ],
+        ],
         include: [
             {
                 model: SpotImage,
@@ -196,8 +207,8 @@ router.get("/:spotId", async (req, res, next) => {
     if (!spot) {
         return res.status(404).json({ message: "Spot couldn't be found" });
     }
-    spot.createdAt = dateTransformer(spot.createdAt);
-    spot.updatedAt = dateTransformer(spot.updatedAt);
+    spot.dataValues.createdAt = dateTransformer(spot.createdAt);
+    spot.dataValues.updatedAt = dateTransformer(spot.updatedAt);
     await spot.save();
 
     res.json(spot);
