@@ -122,22 +122,22 @@ router.get("/", async (req, res, next) => {
      });
   });
 
-router.get("/current", requireAuth, async (req, res, next) => {
-    const { user } = req
+  router.get("/current", requireAuth, async (req, res, next) => {
+    const { user } = req;
 
     const allSpots = await Spot.findAll({
         where: {
-        ownerId: user.id
+            ownerId: user.id
         },
         attributes: {
             include: [
                 [Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), "avgRating"],
-              ],
+            ],
         },
         include: [
             {
-              model: Review,
-              attributes: [],
+                model: Review,
+                attributes: [],
             },
             {
                 model: SpotImage,
@@ -145,9 +145,10 @@ router.get("/current", requireAuth, async (req, res, next) => {
                 where: { preview: true },
                 required: false,
                 as: "previewImage",
-              },
-        ]
-    })
+            },
+        ],
+        group: ['Spot.id']
+    });
 
     const flatten = allSpots.map(spot => {
         const jsonSpot = spot.toJSON();
@@ -158,10 +159,10 @@ router.get("/current", requireAuth, async (req, res, next) => {
         return {
             ...jsonSpot,
             previewImage: spot.toJSON().previewImage[0]?.url
-        }
-    })
+        };
+    });
 
-    res.json({Spots: flatten});
+    res.json({ Spots: flatten });
 });
 
 router.get("/:spotId", async (req, res, next) => {
@@ -566,11 +567,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const { user } = req;
     const currDate = new Date();
 
-    const spot = await Spot.findAll({
-        where: {
-            id: spotId
-        }
-    });
+    const spot = await Spot.findByPk(spotId);
 
     if (!spot) {
         return res.status(404).json({
@@ -585,19 +582,50 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
         }
     })
 
+
+    let reqBodyError = {}
+
+    if (startDate === endDate) {
+        reqBodyError.message = "Start date and end date can't be the same"
+    }
+
+    if (Object.keys(reqBodyError).length > 0) {
+        res.status(403);
+        return res.json({
+            message: "booking error",
+            reqBodyError
+        })
+    }
+
+    const surroundError = {}
+    for (let key in booking) {
+        if (new Date(startDate) <= new Date(booking[key].startDate) && new Date(endDate) >= new Date(booking[key].endDate)) {
+            surroundError.error = "New booking cannot surround current booking dates"
+        }
+    }
+
+    if (Object.keys(surroundError).length > 0) {
+        res.status(403);
+        return res.json({
+            message: "error",
+            surroundError
+        })
+    }
     let bookingErrors = {};
 
     for (let key in booking) {
         if (new Date(startDate) >= new Date(booking[key].startDate) &&
-            new Date(startDate) <= new Date(booking[key].endDate)) {
-                bookingErrors.startDate = "Start date conflicts with an existing booking";
+        new Date(startDate) <= new Date(booking[key].endDate)) {
+            bookingErrors.startDate = "Start date conflicts with an existing booking";
 
         }
         if (new Date(endDate) >= new Date(booking[key].startDate) &&
         new Date(endDate) <= new Date(booking[key].endDate)) {
             bookingErrors.endDate = "End date conflicts with an existing booking";
         }
+
     }
+
 
     if (Object.keys(bookingErrors).length > 0) {
         res.status(403);
@@ -610,7 +638,6 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const dateErrors = {};
     if (new Date(startDate) < currDate) dateErrors.startDate = "startDate cannot be in the past"
     if (new Date(endDate) <= startDate) dateErrors.endDate = "endDate cannot be on or before startDate"
-
     if (Object.keys(dateErrors).length > 0) {
         res.status(400);
         return res.json({
