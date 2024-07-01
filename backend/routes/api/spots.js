@@ -100,9 +100,18 @@ router.get("/", async (req, res, next) => {
         jsonSpot.createdAt = dateTransformer(jsonSpot.createdAt);
         jsonSpot.updatedAt = dateTransformer(jsonSpot.updatedAt);
 
+        const hasImage = spot.toJSON().previewImage[0]?.url
+        let imageCheck
+
+        if (hasImage) {
+            imageCheck = hasImage
+        } else {
+            imageCheck = "no images yet"
+        }
+
         return {
             ...jsonSpot,
-            previewImage: spot.toJSON().previewImage[0]?.url
+            previewImage: imageCheck
         }
     })
 
@@ -287,15 +296,16 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
 
     const spot = await Spot.findByPk(spotId);
 
+    if (!spot) {
+        return res.status(404).json({ message: "Spot couldn't be found" });
+    }
+    
     if (spot.ownerId !== user.id) {
         return res.status(403).json({
             message: "Forbidden"
         })
     }
 
-    if (!spot) {
-        return res.status(404).json({ message: "Spot couldn't be found" });
-    }
 
     const newImage = await SpotImage.create({
         spotId: parseInt(spot.id),
