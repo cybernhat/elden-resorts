@@ -245,6 +245,8 @@ router.post("/", requireAuth, async (req, res, next) => {
     if (!state) errors.state = "State is required";
     if (!country) errors.country = "Country is required";
     if (!lat || isNaN(lat)) errors.lat = "Latitude is invalid";
+    if (lat < -90 || lat > 90) errors.lat = "Latitude must be within -90 and 90";
+    if (lng < -180 || lng > 180) errors.lng = "Longitude must be within -180 and 180";
     if (!lng || isNaN(lng)) errors.lng = "Longitude is invalid";
     if (!name || name.length > 50) errors.name = "Name must be less than 50 characters";
     if (!description) errors.description = "Description is required";
@@ -299,7 +301,7 @@ router.post("/:spotId/images", requireAuth, async (req, res, next) => {
     if (!spot) {
         return res.status(404).json({ message: "Spot couldn't be found" });
     }
-    
+
     if (spot.ownerId !== user.id) {
         return res.status(403).json({
             message: "Forbidden"
