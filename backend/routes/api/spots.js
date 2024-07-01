@@ -156,9 +156,18 @@ router.get("/", async (req, res, next) => {
         jsonSpot.createdAt = dateTransformer(jsonSpot.createdAt);
         jsonSpot.updatedAt = dateTransformer(jsonSpot.updatedAt);
 
+        const hasImage = spot.toJSON().previewImage[0]?.url
+        let imageCheck
+
+        if (hasImage) {
+            imageCheck = hasImage
+        } else {
+            imageCheck = "no images yet"
+        }
+
         return {
             ...jsonSpot,
-            previewImage: spot.toJSON().previewImage[0]?.url
+            previewImage: imageCheck
         };
     });
 
