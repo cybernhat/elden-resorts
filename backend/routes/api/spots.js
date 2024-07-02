@@ -125,53 +125,50 @@ router.get("/", async (req, res, next) => {
   router.get("/current", requireAuth, async (req, res, next) => {
     const { user } = req;
 
-    const allSpots = await Spot.findAll({
-        where: {
-            ownerId: user.id
-        },
-        attributes: {
+    try {
+        const allSpots = await Spot.findAll({
+            where: {
+                ownerId: user.id
+            },
+            attributes: {
+                include: [
+                    [Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), "avgRating"],
+                ],
+            },
             include: [
-                [Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), "avgRating"],
+                {
+                    model: Review,
+                    attributes: [],
+                },
+                {
+                    model: SpotImage,
+                    attributes: ["url"],
+                    where: { preview: true },
+                    required: false,
+                    as: "previewImage",
+                },
             ],
-        },
-        include: [
-            {
-                model: Review,
-                attributes: [],
-            },
-            {
-                model: SpotImage,
-                attributes: ["url"],
-                where: { preview: true },
-                required: false,
-                as: "previewImage",
-            },
-        ],
-        group: ['Spot.id']
-    });
+            group: ['Spot.id', 'previewImage.id', 'previewImage.url',]
+        });
 
-    const flatten = allSpots.map(spot => {
-        const jsonSpot = spot.toJSON();
+        const flatten = allSpots.map(spot => {
+            const jsonSpot = spot.toJSON();
 
-        jsonSpot.createdAt = dateTransformer(jsonSpot.createdAt);
-        jsonSpot.updatedAt = dateTransformer(jsonSpot.updatedAt);
+            jsonSpot.createdAt = dateTransformer(jsonSpot.createdAt);
+            jsonSpot.updatedAt = dateTransformer(jsonSpot.updatedAt);
 
-        const hasImage = spot.toJSON().previewImage[0]?.url
-        let imageCheck
+            const previewImage = jsonSpot.previewImage && jsonSpot.previewImage.length ? jsonSpot.previewImage[0].url : "no images yet";
 
-        if (hasImage) {
-            imageCheck = hasImage
-        } else {
-            imageCheck = "no images yet"
-        }
+            return {
+                ...jsonSpot,
+                previewImage,
+            };
+        });
 
-        return {
-            ...jsonSpot,
-            previewImage: imageCheck
-        };
-    });
-
-    res.json({ Spots: flatten });
+        res.status(200).json({ Spots: flatten });
+    } catch (error) {
+        next(error);
+    }
 });
 
 router.get("/:spotId", async (req, res, next) => {
@@ -346,6 +343,9 @@ router.put("/:spotId", requireAuth, async (req, res, next) => {
 
     const spotToUpdate = await Spot.findByPk(spotId);
 
+    if (!spotToUpdate) {
+        return res.status(404).json({ message: "Spot couldn't be found" });
+    }
     if (spotToUpdate.ownerId !== user.id) {
         return res.status(403).json({
             message: "Forbidden"
@@ -373,9 +373,6 @@ router.put("/:spotId", requireAuth, async (req, res, next) => {
         });
     }
 
-    if (!spotToUpdate) {
-        return res.status(404).json({ message: "Spot couldn't be found" });
-    }
 
     spotToUpdate.address = address || spotToUpdate.address;
     spotToUpdate.city = city || spotToUpdate.city;
