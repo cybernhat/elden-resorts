@@ -634,7 +634,15 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
         spotId: +spotId, userId: currentUser.id, startDate, endDate
       });
       res.status(200);
-      return res.json(createBooking);
+      return res.json({
+        id: createBooking.id,
+        spotId: createBooking.spotId,
+        userId: createBooking.userId,
+        startDate: dateTransformer(createBooking.startDate),
+        endDate: dateTransformer(createBooking.endDate),
+        createdAt: dateTransformer(createBooking.createdAt),
+        updatedAt: dateTransformer(createBooking.updatedAt)
+      });
     }
   });
 
