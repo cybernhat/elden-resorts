@@ -127,16 +127,17 @@ router.put('/:reviewId', requireAuth, async (req, res, next) => {
 
     const reviewToUpdate = await Review.findByPk(reviewId);
 
-    if (reviewToUpdate.userId !== user.id) {
-        res.status(403);
-        return res.json({
-            message: "Forbidden"
-        })
-    }
 
     if (!reviewToUpdate) {
         return res.status(404).json({
             message: "Review couldn't be found"
+        })
+    }
+    
+    if (reviewToUpdate.userId !== user.id) {
+        res.status(403);
+        return res.json({
+            message: "Forbidden"
         })
     }
     let errors = {};
@@ -177,7 +178,7 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
             message: "Review couldn't be found"
         })
     }
-    
+
     if (reviewToDestroy.userId !== user.id) {
         res.status(403);
         return res.json({
