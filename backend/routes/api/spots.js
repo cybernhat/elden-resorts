@@ -15,11 +15,11 @@ const dateTransformer = date => {
     return transformedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`
   }
 
-router.get("/", async (req, res, next) => {
-    const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice} = req.query;
+  router.get("/", async (req, res, next) => {
+    const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-    const pageNum = parseInt(page) || 1;
-    const pageSize = parseInt(size) || 20;
+    const pageNum = page || 1;
+    const pageSize = size || 20;
 
     const offset = (pageNum - 1) * pageSize;
     const limit = pageSize;
@@ -31,22 +31,34 @@ router.get("/", async (req, res, next) => {
     if (isNaN(pageSize) || pageSize < 1) {
         errors.size = "Size must be greater than or equal to 1";
     }
-    if (minLat !== undefined && isNaN(parseInt(minLat))) {
-        errors.minLat = "Minimum latitude is invalid";
+    if (minLat !== undefined) {
+        const minLatNum = parseFloat(minLat);
+        if (isNaN(minLatNum) || minLatNum < -90 || minLatNum > 90) {
+            errors.minLat = "Minimum latitude is invalid";
+        }
     }
-    if (maxLat !== undefined && isNaN(parseInt(maxLat))) {
-        errors.maxLat = "Maximum latitude is invalid";
+    if (maxLat !== undefined) {
+        const maxLatNum = parseFloat(maxLat);
+        if (isNaN(maxLatNum) || maxLatNum < -90 || maxLatNum > 90) {
+            errors.maxLat = "Maximum latitude is invalid";
+        }
     }
-    if (minLng !== undefined && isNaN(parseInt(minLng))) {
-        errors.minLng = "Minimum longitude is invalid";
+    if (minLng !== undefined) {
+        const minLngNum = parseFloat(minLng);
+        if (isNaN(minLngNum) || minLngNum < -180 || minLngNum > 180) {
+            errors.minLng = "Minimum longitude is invalid";
+        }
     }
-    if (maxLng !== undefined && isNaN(parseInt(maxLng))) {
-        errors.maxLng = "Maximum longitude is invalid";
+    if (maxLng !== undefined) {
+        const maxLngNum = parseFloat(maxLng);
+        if (isNaN(maxLngNum) || maxLngNum < -180 || maxLngNum > 180) {
+            errors.maxLng = "Maximum longitude is invalid";
+        }
     }
-    if (minPrice !== undefined && (isNaN(parseInt(minPrice)) || parseInt(minPrice) < 0)) {
+    if (minPrice !== undefined && (isNaN(parseFloat(minPrice)) || parseFloat(minPrice) < 0)) {
         errors.minPrice = "Minimum price must be greater than or equal to 0";
     }
-    if (maxPrice !== undefined && (isNaN(parse(maxPrice)) || parseInt(maxPrice) < 0)) {
+    if (maxPrice !== undefined && (isNaN(parseFloat(maxPrice)) || parseFloat(maxPrice) < 0)) {
         errors.maxPrice = "Maximum price must be greater than or equal to 0";
     }
 
@@ -59,40 +71,39 @@ router.get("/", async (req, res, next) => {
 
     const where = {};
 
-    if (minLat) where.lat = { [Op.gte]: parseInt(minLat) };
-    if (maxLat) where.lat = { ...where.lat, [Op.lte]: parseInt(maxLat) };
-    if (minLng) where.lng = { [Op.gte]: parseInt(minLng) };
-    if (maxLng) where.lng = { ...where.lng, [Op.lte]: parseInt(maxLng) };
-    if (minPrice) where.price = { [Op.gte]: parseInt(minPrice) };
-    if (maxPrice) where.price = { ...where.price, [Op.lte]: parseInt(maxPrice) };
+    if (minLat) where.lat = { [Op.gte]: parseFloat(minLat) };
+    if (maxLat) where.lat = { ...where.lat, [Op.lte]: parseFloat(maxLat) };
+    if (minLng) where.lng = { [Op.gte]: parseFloat(minLng) };
+    if (maxLng) where.lng = { ...where.lng, [Op.lte]: parseFloat(maxLng) };
+    if (minPrice) where.price = { [Op.gte]: parseFloat(minPrice) };
+    if (maxPrice) where.price = { ...where.price, [Op.lte]: parseFloat(maxPrice) };
 
     const spots = await Spot.findAll({
-      attributes: {
+        attributes: {
+            include: [
+                [Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), "avgRating"],
+            ],
+        },
         include: [
-          [Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), "avgRating"],
+            {
+                model: Review,
+                attributes: [],
+                duplicating: false
+            },
+            {
+                model: SpotImage,
+                attributes: ["url"],
+                where: { preview: true },
+                required: false,
+                duplicating: false,
+                as: "previewImage"
+            },
         ],
-      },
-      include: [
-        {
-          model: Review,
-          attributes: [],
-          duplicating: false
-        },
-        {
-          model: SpotImage,
-          attributes: ["url"],
-          where: { preview: true },
-          required: false,
-          as: "previewImage",
-          duplicating: false
-        },
-    ],
         group: ["Spot.id", "previewImage.id"],
         where,
         limit,
         offset
     });
-
 
     const flatten = spots.map(spot => {
         const jsonSpot = spot.toJSON();
@@ -100,75 +111,19 @@ router.get("/", async (req, res, next) => {
         jsonSpot.createdAt = dateTransformer(jsonSpot.createdAt);
         jsonSpot.updatedAt = dateTransformer(jsonSpot.updatedAt);
 
-        const hasImage = spot.toJSON().previewImage[0]?.url
-        let imageCheck
+        const hasImage = jsonSpot.previewImage[0]?.url;
+        jsonSpot.previewImage = hasImage ? hasImage : "no images yet";
 
-        if (hasImage) {
-            imageCheck = hasImage
-        } else {
-            imageCheck = "no images yet"
-        }
+        delete jsonSpot.SpotImages;
 
-        return {
-            ...jsonSpot,
-            previewImage: imageCheck
-        }
-    })
+        return jsonSpot;
+    });
 
     res.json({
         Spots: flatten,
-        page: page,
-        size: size
-     });
-  });
-
-  router.get("/current", requireAuth, async (req, res, next) => {
-    const { user } = req;
-
-    try {
-        const allSpots = await Spot.findAll({
-            where: {
-                ownerId: user.id
-            },
-            attributes: {
-                include: [
-                    [Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), "avgRating"],
-                ],
-            },
-            include: [
-                {
-                    model: Review,
-                    attributes: [],
-                },
-                {
-                    model: SpotImage,
-                    attributes: ["url"],
-                    where: { preview: true },
-                    required: false,
-                    as: "previewImage",
-                },
-            ],
-            group: ['Spot.id', 'previewImage.id', 'previewImage.url',]
-        });
-
-        const flatten = allSpots.map(spot => {
-            const jsonSpot = spot.toJSON();
-
-            jsonSpot.createdAt = dateTransformer(jsonSpot.createdAt);
-            jsonSpot.updatedAt = dateTransformer(jsonSpot.updatedAt);
-
-            const previewImage = jsonSpot.previewImage && jsonSpot.previewImage.length ? jsonSpot.previewImage[0].url : "no images yet";
-
-            return {
-                ...jsonSpot,
-                previewImage,
-            };
-        });
-
-        res.status(200).json({ Spots: flatten });
-    } catch (error) {
-        next(error);
-    }
+        page: pageNum,
+        size: pageSize
+    });
 });
 
 router.get("/:spotId", async (req, res, next) => {
@@ -519,11 +474,25 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
 router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;
     const { user } = req
+
     const spot = await Spot.findByPk(spotId);
 
     if (!spot) {
         return res.status(404).json({
             message: "Spot couldn't be found"
+        })
+    }
+
+    const bookings = await Booking.findAll({
+        where: {
+            spotId: spot.Id
+        }
+    })
+
+    if (!bookings) {
+        res.status(404)
+        return res.json({
+            message: "Bookings couldn't be found"
         })
     }
 
@@ -597,7 +566,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
             message: "Spot couldn't be found"
         })
     }
-    
+
     if (spot.ownerId === user.id) {
         res.status(403);
         return res.json({
