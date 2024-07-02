@@ -114,10 +114,10 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     })
   }
 
-  if (reqStartDate < reqEndDate) {
+  if (reqStartDate > reqEndDate) {
     res.status(400)
     res.json({
-      message: "startDate cannot be earlier than endDate"
+      message: "endDate cannot be earlier than startDate"
     })
   }
 
