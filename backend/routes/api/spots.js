@@ -31,7 +31,7 @@ router.get("/", async (req, res, next) => {
         }
     }
     if (size !== undefined) {
-        if (!size || isNaN(pageSize) || pageSize < 1) {
+    if (!size || isNaN(pageSize) || pageSize < 1) {
             errors.size = "Size must be greater than or equal to 1";
         }
     }
@@ -521,86 +521,43 @@ router.post('/:spotId/reviews', requireAuth, async (req, res, next) => {
     })
 })
 
-router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
-    const { spotId } = req.params;
-    const { user } = req
+router.get("/:spotId/bookings", requireAuth, async (req, res) => {
+    let currentUser = req.user;
+    let spotId = req.params.spotId;
 
-    const spot = await Spot.findByPk(spotId);
-
-    const bookings = await Booking.findOne({
-        where: {
-            spotId: spot.id
-        }
-    })
+    let spot = await Spot.findOne({
+      where: { id: spotId }
+    });
 
     if (!spot) {
-        return res.status(404).json({
-            message: "Spot couldn't be found"
-        })
-    }
-    if (!bookings) {
-        res.status(404)
-        return res.json({
-            message: "Bookings couldn't be found"
-        })
+      res.status(404);
+      return res.json({ "message": "Spot could not be found" });
     }
 
-    if (spot.ownerId !== user.id) {
-        const bookings = await Booking.findAll({
-            where: {
-                spotId
-            },
-            attributes: ['spotId', 'startDate', 'endDate']
-        })
+    let bookings;
+    if (spot.ownerId === currentUser.id) {
+      bookings = await Booking.findAll({
+        where: { spotId: spotId },
+        include: [
+          {
+            model: User,
+            attributes: ["id", "firstName", "lastName"]
+          }
+        ]
+      });
 
-        const updatedDate = bookings.map(booking => {
-            const jsonBooking = booking.toJSON();
+      res.status(200);
+      return res.json({ "Bookings": bookings })
+    } else {
+      bookings = await Booking.findAll({
+        where: { spotId: spotId },
+        attributes: ["spotId", "startDate", "endDate"]
+      });
 
-            jsonBooking.startDate = dateTransformer(jsonBooking.startDate);
-            jsonBooking.endDate = dateTransformer(jsonBooking.endDate)
-
-            return {
-                Bookings: {
-                    ...jsonBooking
-                }
-            }
-        })
-        res.json(...updatedDate);
-    } else if (spot.ownerId === user.id) {
-        const bookings = await Booking.findAll({
-            where: {
-                spotId
-            },
-            include: [
-                {
-                    model: User,
-                    attributes: ['id', 'firstName', 'lastName']
-                }
-            ],
-            attributes: ['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt']
-        })
-
-        const updatedDate = bookings.map(booking => {
-            const jsonBooking = booking.toJSON();
-
-            jsonBooking.startDate = dateTransformer(jsonBooking.startDate);
-            jsonBooking.endDate = dateTransformer(jsonBooking.endDate);
-            jsonBooking.createdAt = dateTransformer(jsonBooking.createdAt);
-            jsonBooking.updatedAt = dateTransformer(jsonBooking.updatedAt)
-
-            return {
-                Bookings: {
-                    ...jsonBooking
-                }
-            }
-        })
-
-        res.json({
-            ...updatedDate
-        })
+      res.status(200);
+      return res.json({ "Bookings": bookings });
     }
-
-})
+  });
 
 router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const { spotId } = req.params;

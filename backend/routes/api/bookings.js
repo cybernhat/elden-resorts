@@ -155,8 +155,17 @@ router.get("/current", requireAuth, async (req, res, next) => {
       existingBooking.endDate = endDate;
 
       await existingBooking.save();
+
       res.status(200);
-      return res.json(existingBooking);
+      return res.json({
+        id: existingBooking.id,
+        spotId: existingBooking.spotId,
+        userId: existingBooking.userId,
+        startDate: dateTransformer(existingBooking.startDate),
+        endDate: dateTransformer(existingBooking.endDate),
+        createdAt: dateTransformer(existingBooking.createdAt),
+        updatedAt: dateTransformer(existingBooking.updatedAt)
+      });
     }
   });
 
