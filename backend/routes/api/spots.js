@@ -13,25 +13,20 @@ const dateTransformer = date => {
     let second = date.getSeconds();
 
     return transformedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`
-  }
+}
 
 router.get("/", async (req, res, next) => {
     const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-    const pageNum = page || 1;
-    const pageSize = size || 20;
-
-    const offset = (pageNum - 1) * pageSize;
-    const limit = pageSize;
 
     const errors = {};
     if (page !== undefined) {
-        if (isNaN(pageNum) || pageNum < 1) {
+        if (isNaN(page) || page < 1) {
             errors.page = "Page must be greater than or equal to 1";
         }
     }
     if (size !== undefined) {
-      if (isNaN(pageSize) || pageSize < 1) {
+        if (isNaN(size) || size < 1) {
             errors.size = "Size must be greater than or equal to 1";
         }
     }
@@ -72,6 +67,13 @@ router.get("/", async (req, res, next) => {
             errors
         });
     }
+
+
+    const pageNum = page || 1;
+    const pageSize = size || 20;
+
+    const offset = (pageNum - 1) * pageSize;
+    const limit = pageSize;
 
     const where = {};
 
