@@ -122,9 +122,17 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
 router.put('/:reviewId', requireAuth, async (req, res, next) => {
     const { reviewId } = req.params;
-    const { review, stars} = req.body
+    const { review, stars} = req.body;
+    const { user } = req
 
     const reviewToUpdate = await Review.findByPk(reviewId);
+
+    if (reviewToUpdate.userId !== user.id) {
+        res.status(403);
+        return res.json({
+            message: "Forbidden"
+        })
+    }
 
     if (!reviewToUpdate) {
         return res.status(404).json({
@@ -164,15 +172,16 @@ router.delete('/:reviewId', requireAuth, async (req, res, next) => {
     const { user } = req
     const reviewToDestroy = await Review.findByPk(reviewId);
 
+    if (!reviewToDestroy) {
+        return res.status(404).json({
+            message: "Review couldn't be found"
+        })
+    }
+    
     if (reviewToDestroy.userId !== user.id) {
         res.status(403);
         return res.json({
             message: "Forbidden"
-        })
-    }
-    if (!reviewToDestroy) {
-        return res.status(404).json({
-            message: "Review couldn't be found"
         })
     }
     await reviewToDestroy.destroy();

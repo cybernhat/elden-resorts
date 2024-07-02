@@ -592,15 +592,16 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     const spot = await Spot.findByPk(spotId);
 
+    if (!spot) {
+        return res.status(404).json({
+            message: "Spot couldn't be found"
+        })
+    }
+    
     if (spot.ownerId === user.id) {
         res.status(403);
         return res.json({
             message: "Forbidden"
-        })
-    }
-    if (!spot) {
-        return res.status(404).json({
-            message: "Spot couldn't be found"
         })
     }
 
@@ -701,13 +702,14 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
 
     const spotToDestroy = await Spot.findByPk(spotId);
 
+    if (!spotToDestroy) {
+        return res.status(404).json({ message: "Spot couldn't be found"});
+    }
+
     if (spotToDestroy.ownerId !== user.id) {
         return res.status(403).json({ message: "Forbidden"});
     }
 
-    if (!spotToDestroy) {
-        return res.status(404).json({ message: "Spot couldn't be found"});
-    }
 
     await spotToDestroy.destroy()
 

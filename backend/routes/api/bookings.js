@@ -151,19 +151,20 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
   const { user } = req
   const booking = await Booking.findByPk(bookingId)
 
-  if (booking.userId !== user.id) {
-    res.status(403);
-    return res.json({
-      message: "Forbidden"
-    })
-  };
-  
   if (!booking) {
     res.status(404);
     return res.json({
       message: "Booking couldn't be found"
     })
   }
+  
+  if (booking.userId !== user.id) {
+    res.status(403);
+    return res.json({
+      message: "Forbidden"
+    })
+  };
+
 
   if (new Date(booking.startDate) >= currDate && new Date(booking.endDate) < currDate) {
     res.status(403);
