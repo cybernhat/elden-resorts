@@ -625,7 +625,7 @@ router.post("/:spotId/bookings", requireAuth, async (req, res) => {
 
     } else if (new Date(startDate) <= currentDate || new Date(endDate) <= currentDate) {
       errors.pastDates = "Cannot book past dates"
-      res.status(403);
+      res.status(400);
       return res.json({
         "message": "Bad Request",
         errors

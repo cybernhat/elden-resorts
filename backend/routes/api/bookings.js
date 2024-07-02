@@ -147,7 +147,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
 
 
       if (new Date(startDate) <= currentDate || new Date(endDate) <= currentDate) {
-        res.status(403);
+        res.status(400);
         return res.json({ "message": "Cannot book past dates" });
       }
 
