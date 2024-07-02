@@ -545,18 +545,21 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
           }
         ]
       });
-
-      res.status(200);
-      return res.json({ "Bookings": bookings })
     } else {
       bookings = await Booking.findAll({
         where: { spotId: spotId },
         attributes: ["spotId", "startDate", "endDate"]
       });
-
-      res.status(200);
-      return res.json({ "Bookings": bookings });
     }
+
+    bookings = bookings.map(booking => {
+        const jsonBooking = booking.toJSON();
+        jsonBooking.startDate = dateTransformer(jsonBooking.startDate)
+        jsonBooking.endDate = dateTransformer(jsonBooking.endDate)
+        return jsonBooking
+    })
+
+    res.status(200).json({ "Bookings": bookings})
   });
 
 router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
