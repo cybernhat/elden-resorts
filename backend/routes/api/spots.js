@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { Spot, Review, SpotImage, ReviewImage, User, Booking, Sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
-
+const { Op } = require("sequelize")
 const dateTransformer = date => {
     let transformedDate = ``
 
