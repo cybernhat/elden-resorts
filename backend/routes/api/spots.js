@@ -25,11 +25,15 @@ router.get("/", async (req, res, next) => {
     const limit = pageSize;
 
     const errors = {};
-    if (!page || isNaN(pageNum) || pageNum < 1) {
-        errors.page = "Page must be greater than or equal to 1";
+    if (page !== undefined) {
+        if (isNaN(pageNum) || pageNum < 1) {
+            errors.page = "Page must be greater than or equal to 1";
+        }
     }
-    if (!size || isNaN(pageSize) || pageSize < 1) {
-        errors.size = "Size must be greater than or equal to 1";
+    if (size !== undefined) {
+        if (!size || isNaN(pageSize) || pageSize < 1) {
+            errors.size = "Size must be greater than or equal to 1";
+        }
     }
     if (minLat !== undefined) {
         const minLatNum = parseFloat(minLat);
@@ -523,20 +527,17 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     const spot = await Spot.findByPk(spotId);
 
-
-    if (!spot) {
-        return res.status(404).json({
-            message: "Spot couldn't be found"
-        })
-    }
-
     const bookings = await Booking.findOne({
         where: {
             spotId: spot.id
         }
     })
 
-
+    if (!spot) {
+        return res.status(404).json({
+            message: "Spot couldn't be found"
+        })
+    }
     if (!bookings) {
         res.status(404)
         return res.json({
