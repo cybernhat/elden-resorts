@@ -477,17 +477,19 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
 
     const spot = await Spot.findByPk(spotId);
 
+
     if (!spot) {
         return res.status(404).json({
             message: "Spot couldn't be found"
         })
     }
 
-    const bookings = await Booking.findAll({
+    const bookings = await Booking.findOne({
         where: {
-            spotId: spot.Id
+            spotId: spot.id
         }
     })
+
 
     if (!bookings) {
         res.status(404)
