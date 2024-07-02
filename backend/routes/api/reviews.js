@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { DataTypes } = require("sequelize");
 const { Spot, Review, SpotImage, User, ReviewImage, Sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
+const e = require("express");
 
 const dateTransformer = date => {
     let transformedDate = ``
@@ -58,6 +59,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
             if (jsonSpot.previewImage && jsonSpot.previewImage.length > 0) {
                 previewImage = jsonSpot.previewImage[0].url
+            } else {
+                previewImage = "no previews yet"
             }
 
             jsonReview.Spot = {
