@@ -148,8 +148,16 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
 router.delete('/:bookingId', requireAuth, async (req, res, next) => {
   const { bookingId } = req.params;
   const { currDate } = new Date();
+  const { user } = req
   const booking = await Booking.findByPk(bookingId)
 
+  if (booking.userId !== user.id) {
+    res.status(403);
+    return res.json({
+      message: "Forbidden"
+    })
+  };
+  
   if (!booking) {
     res.status(404);
     return res.json({
