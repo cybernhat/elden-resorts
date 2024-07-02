@@ -31,7 +31,7 @@ router.get("/", async (req, res, next) => {
         }
     }
     if (size !== undefined) {
-    if (!size || isNaN(pageSize) || pageSize < 1) {
+      if (isNaN(pageSize) || pageSize < 1) {
             errors.size = "Size must be greater than or equal to 1";
         }
     }
