@@ -75,7 +75,7 @@ router.get("/current", requireAuth, async (req, res, next) => {
     res.status(200).json(formattedBookings);
   });
 
-  outer.put("/:bookingId", requireAuth, async (req, res) => {
+  router.put("/:bookingId", requireAuth, async (req, res) => {
     let currentUser = req.user;
     let bookingId = req.params.bookingId;
 
