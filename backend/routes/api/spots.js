@@ -242,8 +242,8 @@ router.get("/:spotId", async (req, res, next) => {
         updatedAt: dateTransformer(spot.updatedAt),
         previewImages: spot.previewImage,
         Owner: spot.Owner,
-        numReviews: numReviews,
-        avgRating: avgRating
+        numReviews: numReviews || 'no reviews yet',
+        avgRating: avgRating || 'no ratings yet'
     });
 })
 
