@@ -15,7 +15,7 @@ const dateTransformer = date => {
     return transformedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`
   }
 
-  router.get("/", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
     const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
     const pageNum = page || 1;
@@ -25,10 +25,10 @@ const dateTransformer = date => {
     const limit = pageSize;
 
     const errors = {};
-    if (isNaN(pageNum) || pageNum < 1) {
+    if (!page || isNaN(pageNum) || pageNum < 1) {
         errors.page = "Page must be greater than or equal to 1";
     }
-    if (isNaN(pageSize) || pageSize < 1) {
+    if (!size || isNaN(pageSize) || pageSize < 1) {
         errors.size = "Size must be greater than or equal to 1";
     }
     if (minLat !== undefined) {
@@ -125,6 +125,52 @@ const dateTransformer = date => {
         size: pageSize
     });
 });
+
+router.get("/current", requireAuth, async (req, res) => {
+    const { user } = req;
+    const Spots = await user.getSpots({
+      attributes: {
+        include: [
+          [Sequelize.fn("AVG", Sequelize.col("Reviews.stars")), "avgRating"],
+        ],
+      },
+      include: [
+        {
+          model: Review,
+          attributes: [],
+        },
+        {
+          model: SpotImage,
+          attributes: ["url"],
+          where: { preview: true },
+          required: false,
+          as: "previewImage",
+        },
+      ],
+      group: ["Spot.id", "previewImage.id"],
+    });
+
+    const flatten = Spots.map((spot) => {
+      const createdAt = dateTransformer(spot.createdAt);
+      const updatedAt = dateTransformer(spot.updatedAt);
+
+      let image
+
+      if (spot.toJSON().previewImage[0]) {
+        image = spot.toJSON().previewImage[0].url
+      } else {
+        image = 'no images yet'
+      }
+      return {
+        ...spot.toJSON(),
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        previewImage: image
+      };
+    });
+
+    res.json({ Spots: flatten });
+  });
 
 router.get("/:spotId", async (req, res, next) => {
     const { spotId } = req.params;
