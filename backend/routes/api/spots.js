@@ -591,13 +591,11 @@ router.post('/:spotId/bookings', requireAuth, async (req, res, next) => {
     })
 
     let reqBodyError = {}
-
-    if (new Date(startDate) === new Date(endDate)) {
-        reqBodyError.message = "Start date and end date can't be the same"
-    }
-
     if (new Date(startDate) > new Date(startDate)) {
         reqBodyError.bookingError = "EndDate cannot be before startDate"
+    }
+    if (new Date(startDate) === new Date(endDate)) {
+        reqBodyError.message = "Start date and end date can't be the same"
     }
 
     if (Object.keys(reqBodyError).length > 0) {
