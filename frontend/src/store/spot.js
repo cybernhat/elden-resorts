@@ -11,6 +11,15 @@ const getSpots = (spots) => {
     }
 }
 
+// const GET_SPOT_BY_ID = 'spot/getSpotId'
+
+// const getSpotById = (spotId) => {
+//     return {
+//         type: GET_SPOT_BY_ID,
+//         spotId
+//     }
+// }
+
 // thunks
 export const fetchAllSpots = () => async dispatch => {
     const response = await fetch('/api/spots')
@@ -26,6 +35,16 @@ export const fetchAllSpots = () => async dispatch => {
     }
 }
 
+// export const fetchSpotById = (spotId) => async dispatch => {
+//     const response = await fetch(`/api/${spotId}`);
+
+//     if (response.ok) {
+//         const data = await response.json();
+
+//         dispatch(getSpotById(data))
+//     }
+
+// }
 const initialState = {}
 
 const spotReducer = (state = initialState, action) => {
@@ -37,6 +56,9 @@ const spotReducer = (state = initialState, action) => {
             })
             return newState;
         }
+        // case GET_SPOT_BY_ID: {
+
+        // }
         default:
             return state
     }
