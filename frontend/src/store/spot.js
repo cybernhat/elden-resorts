@@ -1,6 +1,3 @@
-import { csrfFetch } from './csrf.js';
-
-// case
 const GET_SPOTS = 'spot/getSpots';
 
 // actions
