@@ -7,13 +7,15 @@ function Navigation({ isLoaded }) {
   const sessionUser = useSelector(state => state.session.user);
 
   return (
-    <ul>
+    <ul id='nav'>
       <li>
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/">
+        <img id='home-icon' src='/resizedhomepage.png' alt='Home'/>
+        </NavLink>
       </li>
       {isLoaded && (
         <li>
-          <ProfileButton user={sessionUser} />
+          <ProfileButton id='profile-button' user={sessionUser} />
         </li>
       )}
     </ul>
