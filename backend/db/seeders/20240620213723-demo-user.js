@@ -13,45 +13,45 @@ module.exports = {
     options.tableName = "Users";
     await User.bulkCreate([
       {
-        username: 'Demo-lition',
-        email: 'demo@user.io',
-        firstName: "Demo",
-        lastName: "Lition",
+        username: 'TyTyTheWeeWee',
+        email: 'tywinlann@hotmail.com',
+        firstName: "Tywin",
+        lastName: "Lannister",
         hashedPassword: bcrypt.hashSync('password')
       },
       {
-        username: 'Homey',
-        email: 'homer@gmail.com',
-        firstName: "Homer",
-        lastName: "Simpson",
+        username: 'motherOdragons',
+        email: 'daenerysd@gmail.com',
+        firstName: "Daenerys",
+        lastName: "Targaryen",
         hashedPassword: bcrypt.hashSync('password')
       },
       {
-        username: 'Margey',
-        firstName: "Marge",
-        lastName: "Simpson",
-        email: 'marge@gmail.com',
+        username: 'jonSnow',
+        firstName: "Jon",
+        lastName: "Snow",
+        email: 'jonsnow@gmail.com',
         hashedPassword: bcrypt.hashSync('password')
       },
       {
-        username: 'Barty',
-        firstName: "Bart",
-        lastName: "Simpson",
-        email: 'bart@gmail.com',
+        username: 'BobbyB',
+        firstName: "Robert",
+        lastName: "Baratheon",
+        email: 'kingofwesteros@gmail.com',
         hashedPassword: bcrypt.hashSync('password')
       },
       {
-        username: 'Lisy',
-        firstName: "Lisa",
-        lastName: "Simpson",
-        email: 'lisa@gmail.com',
+        username: 'rogueprince',
+        firstName: "Daemon",
+        lastName: "Targaryen",
+        email: 'daemontheboy@gmail.com',
         hashedPassword: bcrypt.hashSync('password')
       },
       {
-        username: 'Maggy',
-        firstName: "Maggie",
-        lastName: "Simpson",
-        email: 'maggie@gmail.com',
+        username: 'ladysman912',
+        firstName: "Tyrion",
+        lastName: "Lannister",
+        email: 'tillywilly@gmail.com',
         hashedPassword: bcrypt.hashSync('password')
       }
     ], { validate: true });
