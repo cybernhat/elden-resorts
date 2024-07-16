@@ -9,7 +9,8 @@
 
 #home-icon {
   width: 350px;
-  margin-left: -25px
+  margin-left: -25px;
+  width: 250px
 }
 
 #nav {
@@ -18,7 +19,8 @@
   align-items: center;
   padding-right: 100px;
   padding-left: 50px;
-  border-bottom: 2px solid black
+  border-bottom: 2px solid black;
+  height: 100px
 }
 
 #profile-button {

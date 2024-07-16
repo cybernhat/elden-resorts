@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllSpots } from '../../store/spot';
 import './Spot.css';
@@ -8,7 +8,9 @@ const Spots = () => {
     const spotsObj = useSelector(state => state.spots);
     const spots = Object.values(spotsObj);
 
-    spots.forEach(spot => console.log(spot.previewImage))
+    console.log('spotsObj', spotsObj)
+    console.log('spots', spots)
+
     useEffect(() => {
         dispatch(fetchAllSpots())
     }, [dispatch])
@@ -19,8 +21,8 @@ const Spots = () => {
           <ul id='spot-list'>
             {spots.map(spot => (
               <li id='spot-item' key={spot.id}>
-                <NavLink to='/' class='navlink'>
-                    <img class='spot-image' src={spot.previewImage}/>
+                <NavLink to='/' className='navlink'>
+                    <img className='spot-image' src={spot.previewImage}/>
                     <h2>{`${spot.city}, ${spot.state}`}</h2>
                      <p>ᚠ {spot.price} runes</p>
                 </NavLink>
