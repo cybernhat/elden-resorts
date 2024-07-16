@@ -110,8 +110,8 @@ module.exports = {
       {
         ownerId: 5,
         address: "202 Boreal Rd",
-        city: "Lothric",
-        state: "Boreal Valley",
+        city: "Boreal Valley",
+        state: "Lothric",
         country: "Lothric Kingdom",
         lat: 25.7617,
         lng: -80.1918,
@@ -122,9 +122,9 @@ module.exports = {
       {
         ownerId: 5,
         address: "400 God Hills ",
-        city: "Lothric",
-        state: "Boreal Valley",
-        country: "Lothric Kingdom",
+        city: "Lordran City",
+        state: "Lordran",
+        country: "Kingdom of Lordran",
         lat: 34.0522,
         lng: -118.2437,
         name: "Anor Londo",
