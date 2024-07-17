@@ -49,6 +49,7 @@ export const fetchSpotById = (spotId) => async dispatch => {
     if (response.ok) {
         const data = await response.json();
 
+
         dispatch(getSpotById(data))
 
         return data;
@@ -65,12 +66,14 @@ export const postSpot = (spot) => async dispatch => {
         },
         body: JSON.stringify(spot)
     });
+
     if (response.ok) {
-        const newSpot = await response.json
+        const newSpot = await response.json();
 
         dispatch(createSpot(newSpot))
-
+        console.log('newSpotThunk', newSpot)
         return newSpot;
+
     }
 }
 

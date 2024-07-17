@@ -1,6 +1,7 @@
 #user-button {
     background: #ef8b09;
     border-radius: 20px;
+    margin-right: 50px;
 }
 
 #user-button:hover {

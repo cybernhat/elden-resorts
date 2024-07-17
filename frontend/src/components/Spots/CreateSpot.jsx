@@ -86,6 +86,8 @@ const CreateSpot = () => {
 
         const createdSpot = await dispatch(postSpot(spotBody));
 
+        console.log('createSpot', createdSpot)
+
         // const imagePayloads = [
         //     1,2,3
         // ];

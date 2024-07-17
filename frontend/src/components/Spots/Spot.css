@@ -5,18 +5,18 @@
 .spot-image {
     width: 500px;
     height: 300px;
-    padding: 0; /* Reduce padding to avoid extra space */
+    padding: 0;
     border: 2px solid black;
     box-sizing: border-box;
-    border-radius: 10px; /* Include padding and border in the total width and height */
+    border-radius: 10px;
   }
 
   .spot-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the image fills the container while maintaining aspect ratio */
-    display: block; /* Ensures proper block-level display */
-    border-radius: 8px; /* Optional: Adds rounded corners to the image */
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
   }
 #spot-list {
     display: flex;
@@ -32,7 +32,7 @@
 }
 
 #spot-item h2 {
-  margin: 10px 0; /* Adjust margins as needed */
+  margin: 10px 0;
 }
 
 #spot-item p {
@@ -43,29 +43,19 @@
   color: var(--text-color);
   text-decoration: none;
 }
-.main-image {
-  width: 1000px;
-  height: 600px;
-}
-
-#spot-card {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
 
 .info{
   display: flex;
   justify-content: space-between;
 }
 
-.star-icon {
-  width: 30px;
+#star-icon {
+  width: 50px;
   height: 30px;
-  padding-top: 7px
+  padding-top: 7px;
 }
 
 .star-rating {
   display: flex;
-  gap: 8px
+
 }

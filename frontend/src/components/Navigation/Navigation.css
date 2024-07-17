@@ -1,6 +1,5 @@
 .profile-dropdown {
   position: absolute;
-  right: 8em
 }
 
 .hidden {
@@ -9,7 +8,7 @@
 
 #home-icon {
   width: 350px;
-  margin-left: -25px;
+  margin-left: 30px;
   width: 250px
 }
 
@@ -17,12 +16,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-right: 100px;
-  padding-left: 50px;
+  width: 100%;
   border-bottom: 2px solid black;
-  height: 100px
-}
-
-#profile-button {
-  width: 500px
+  height: 100px;
+  background-color: #201D1D;
 }
