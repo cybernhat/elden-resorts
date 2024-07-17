@@ -1,15 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import { Link, useNavigate, NavLink } from "react-router-dom";
+import { PiUserListBold } from "react-icons/pi";
+import './ProfileButton.css'
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
-
+  const navigate = useNavigate();
   const toggleMenu = (e) => {
     e.stopPropagation(); // Keep from bubbling up to document and triggering closeMenu
     setShowMenu(!showMenu);
@@ -35,25 +38,32 @@ function ProfileButton({ user }) {
     e.preventDefault();
     dispatch(sessionActions.logout());
     closeMenu();
+    navigate('/')
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
     <>
-      <button onClick={toggleMenu}>
-        <i className="fas fa-user-circle" />
-      </button>
+      <div id='user-container'>
+        {user && <NavLink id='spot-creator' to='/spots/create'>Create a Spot</NavLink>}
+          <button id='user-button' onClick={toggleMenu}>
+            <PiUserListBold className="user-icon" />
+          </button>
+      </div>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
-          <>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+          <div id='logged-in-dropdown'>
+            <li>Hello, {user.firstName}!</li>
             <li>{user.email}</li>
             <li>
-              <button onClick={logout}>Log Out</button>
+              <button onClick={logout}>
+                <Link to='/'>
+                Log Out
+                </Link>
+                </button>
             </li>
-          </>
+          </div>
         ) : (
           <>
             <OpenModalMenuItem

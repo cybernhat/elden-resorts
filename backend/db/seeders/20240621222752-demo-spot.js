@@ -21,7 +21,7 @@ module.exports = {
         lng: -122.4194,
         name: "Stormveil Castle",
         description: "Big stormy castle.",
-        price: 150.00,
+        price: 300.00,
       },
       {
         ownerId: 1,
@@ -33,7 +33,7 @@ module.exports = {
         lng: -122.3321,
         name: "Raya Lucaria",
         description: "Academy of magic great for learning the mystic arts.",
-        price: 180.00,
+        price: 500.00,
       },
       {
         ownerId: 2,
@@ -45,7 +45,7 @@ module.exports = {
         lng: -74.0060,
         name: "Redmane Castle",
         description: "Grand castle of Caelid. Very cozy and warm.",
-        price: 550.00,
+        price: 100.00,
       },
       {
         ownerId: 2,
@@ -57,7 +57,7 @@ module.exports = {
         lng: -97.7431,
         name: "Belurat",
         description: "An eclectic home with a unique aesthetic.",
-        price: 320.00,
+        price: 200.00,
       },
       {
         ownerId: 3,
@@ -69,7 +69,7 @@ module.exports = {
         lng: -87.6298,
         name: "Volcano Manor",
         description: "A hot resort with numerous saunas and hot springs.",
-        price: 130.00,
+        price: 350.00,
       },
       {
         ownerId: 3,
@@ -81,7 +81,7 @@ module.exports = {
         lng: -104.9903,
         name: "Royal Capital of Leyndell",
         description: "Majestic resort that makes you feel like a king.",
-        price: 200.00,
+        price: 800.00,
       },
       {
         ownerId: 4,
@@ -93,7 +93,7 @@ module.exports = {
         lng: -118.2437,
         name: "Castle Morne",
         description: "Cozy castle by the sea. Perfect for a relaxing getaway",
-        price: 300.00,
+        price: 250.00,
       },
       {
         ownerId: 4,
@@ -105,7 +105,7 @@ module.exports = {
         lng: -122.6784,
         name: "Elphael",
         description: "Castle facing the sunset.",
-        price: 60.00,
+        price: 700.00,
       },
       {
         ownerId: 5,
@@ -117,7 +117,7 @@ module.exports = {
         lng: -80.1918,
         name: "Irithyll of the Boreal Valley",
         description: "Mystical resort that will fulfill your gothic fantasy",
-        price: 400.00,
+        price: 800.00,
       },
       {
         ownerId: 5,
@@ -129,7 +129,7 @@ module.exports = {
         lng: -118.2437,
         name: "Anor Londo",
         description: "Legendary castle of the Gods",
-        price: 1200.00,
+        price: 950.00,
       },
       {
         ownerId: 6,
@@ -141,7 +141,7 @@ module.exports = {
         lng: -118.4965,
         name: "Shadow Keep",
         description: "Gothic castle rich in history.",
-        price: 700.00,
+        price: 350.00,
       },
       {
         ownerId: 6,
@@ -153,7 +153,7 @@ module.exports = {
         lng: -118.4965,
         name: "Enir-Ilim",
         description: "Grand castle in the sky.",
-        price: 100.00,      }
+        price: 1200.00,      }
     ], { validate: true });
   },
 

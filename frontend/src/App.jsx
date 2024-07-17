@@ -7,6 +7,8 @@ import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
 import { Modal } from './context/Modal';
 import Spots from './components/Spots';
+import SpotById from './components/Spots/SpotById';
+import CreateSpot from './components/Spots/CreateSpot';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -36,12 +38,20 @@ const router = createBrowserRouter([
         element: <Spots />
       },
       {
+        path: '/spots/:spotId',
+        element: <SpotById />
+      },
+      {
         path: 'login',
         element: <LoginFormPage />
       },
       {
         path: 'signup',
         element: <SignupFormPage />
+      },
+      {
+        path: '/spots/create',
+        element: <CreateSpot />
       }
     ]
   }

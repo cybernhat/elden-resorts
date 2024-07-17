@@ -1,0 +1,36 @@
+#user-button {
+    background: #ef8b09;
+    border-radius: 20px;
+}
+
+#user-button:hover {
+    box-shadow: 0 0 5px 2px grey; /* Adjusted to show shadow on all sides */
+}
+.user-icon {
+    width: 75px;
+    height: 30px;
+}
+
+#logged-in-dropdown {
+    background-color: white;
+    margin-top: 5px;
+    margin-right: -25px;
+
+}
+
+#user-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px
+}
+
+#spot-creator {
+    font-size: 30px;
+    text-decoration: none;
+    color: #ef8b09;
+}
+
+#spot-creator:hover {
+    text-decoration: underline
+}
