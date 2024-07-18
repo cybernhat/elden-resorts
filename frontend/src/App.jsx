@@ -9,7 +9,8 @@ import { Modal } from './context/Modal';
 import Spots from './components/Spots';
 import SpotById from './components/Spots/SpotById';
 import CreateSpot from './components/Spots/CreateSpot';
-import ManageSpot from './components/Spots/ManageSpot'
+import ManageSpot from './components/Spots/ManageSpot';
+import EditSpot from './components/Spots/EditSpot';
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: '/spots/create',
         element: <CreateSpot />
+      },
+      {
+        path: '/spots/:spotId/edit',
+        element: <EditSpot />
       },
       {
         path: '/spots/manage',

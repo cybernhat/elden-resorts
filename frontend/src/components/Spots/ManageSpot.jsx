@@ -44,7 +44,10 @@ const ManageSpot = () => {
                             </NavLink>
                             <div id="update-delete-container">
                                 <button className="manage-button">
+                                    <NavLink
+                                    to={`/spots/${spot.id}/edit`}>
                                     Update
+                                    </NavLink>
                                 </button>
                                 <button className="manage-button">
                                     Delete

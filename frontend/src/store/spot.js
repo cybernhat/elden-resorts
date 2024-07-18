@@ -28,6 +28,15 @@ const createSpot = (spot) => {
     }
 }
 
+const EDIT_SPOT = 'spot/editSpot'
+
+const updateSpot = (spot) => {
+    return {
+        type: EDIT_SPOT,
+        payload: spot
+    }
+}
+
 const GET_SPOT_BY_CURRENT_USER = 'spot/getSpotByCurrentUser'
 
 const getSpotByCurrentUser = (spots) => {
@@ -74,6 +83,28 @@ export const fetchSpotByCurrentUser = () => async dispatch => {
         return data;
     }
 }
+
+export const editSpot = (spot, spotId) => async dispatch => {
+    const response = await csrfFetch(`/api/spots/${spotId}`,
+        {
+            method: 'PUT',
+            headers:
+            {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(spot)
+        }
+    );
+
+    if (response.ok) {
+        const updatedSpot = await response.json();
+
+        dispatch(updateSpot(updatedSpot))
+
+        return updatedSpot
+    }
+}
+
 export const postSpot = (spot) => async dispatch => {
     const response = await csrfFetch('/api/spots',
     {
@@ -124,6 +155,11 @@ const spotReducer = (state = initialState, action) => {
                 newState[spot.id] = spot
             })
             return newState
+        }
+        case EDIT_SPOT: {
+            const newState = { ...state };
+            newState[action.payload.id] = action.payload;
+            return newState;
         }
         default:
             return state

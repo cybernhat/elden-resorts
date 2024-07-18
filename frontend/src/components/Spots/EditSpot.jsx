@@ -1,97 +1,110 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import { postSpot } from '../../store/spot';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import {fetchSpotById, editSpot } from '../../store/spot'
 
-const CreateSpot = () => {
-    const currUser = useSelector(state => state.session.user);
+const EditSpot = () => {
+    const { spotId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const currUser = useSelector(state => state.session.user);
 
-    const [name, setName] = useState('Cool Place')
-    const [country, setCountry] = useState("USA");
-    const [address, setAddress] = useState("123 1st Ave");
-    const [city, setCity] = useState("Oakland");
-    const [state, setState] = useState("CA");
-    const [latitude, setLatitude] = useState("50.1234");
-    const [longitude, setLongitude] = useState("100.1234");
-    const [description, setDescription] = useState("Very nice place, in the hood, you can hear gunshots and it will sound like fireworks. Great for family and fun!");
-    const [price, setPrice] = useState(199.99);
-    const [mainImageUrl, setMainImageUrl] = useState("https://picsum.photos/300/300?random=1");
-    const [imageUrl1, setImageUrl1] = useState("https://picsum.photos/300/300?random=2");
-    const [imageUrl2, setImageUrl2] = useState("https://picsum.photos/300/300?random=3");
-    const [imageUrl3, setImageUrl3] = useState("https://picsum.photos/300/300?random=4");
-    const [imageUrl4, setImageUrl4] = useState("https://picsum.photos/300/300?random=5");
+    const spotToUpdate = useSelector(state => state.spots[spotId]);
+
+    // State for form fields
+    const [name, setName] = useState('');
+    const [country, setCountry] = useState('');
+    const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [latitude, setLatitude] = useState('');
+    const [longitude, setLongitude] = useState('');
+    const [description, setDescription] = useState('');
+    const [price, setPrice] = useState('');
+    const [mainImageUrl, setMainImageUrl] = useState('');
+    const [imageUrl1, setImageUrl1] = useState('');
+    const [imageUrl2, setImageUrl2] = useState('');
+    const [imageUrl3, setImageUrl3] = useState('');
+    const [imageUrl4, setImageUrl4] = useState('');
     const [errors, setErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
+    // Fetch spot data when component mounts
+    useEffect(() => {
+        dispatch(fetchSpotById(spotId));
+    }, [dispatch, spotId]);
+
+    // Update form fields when spotToUpdate changes
+    useEffect(() => {
+        if (spotToUpdate) {
+            setName(spotToUpdate.name);
+            setCountry(spotToUpdate.country);
+            setAddress(spotToUpdate.address);
+            setCity(spotToUpdate.city);
+            setState(spotToUpdate.state);
+            setLatitude(spotToUpdate.lat);
+            setLongitude(spotToUpdate.lng);
+            setDescription(spotToUpdate.description);
+            setPrice(spotToUpdate.price);
+            setMainImageUrl("https://picsum.photos/300/300?random=1");
+            setImageUrl1("https://picsum.photos/300/300?random=2");
+            setImageUrl2("https://picsum.photos/300/300?random=3");
+            setImageUrl3("https://picsum.photos/300/300?random=4");
+            setImageUrl4("https://picsum.photos/300/300?random=5");
+        }
+    }, [spotToUpdate]);
+
+    // Validate form fields
     useEffect(() => {
         let formErrors = {};
 
-        // error if field is empty
-        if (!name) formErrors.name = 'Name is required'
-        if (!country) formErrors.country = "Country is required";
-        if (!address) formErrors.address = "Address is required";
-        if (!city) formErrors.city = "City is required";
-        if (!state) formErrors.state = "State is required";
-        if (!latitude) formErrors.latitude = "Latitude is required";
-        if (!longitude) formErrors.longitude = "Longitude is required";
-        if (!description) formErrors.description = "Description is required";
-        if (!price) formErrors.price = "Price is required";
-        if (!mainImageUrl)
-            formErrors.mainImageUrl = "Main Image URL is required";
-        if (!imageUrl1) formErrors.imageUrl1 = "Image URL 1 is required";
-        if (!imageUrl2) formErrors.imageUrl2 = "Image URL 2 is required";
-        if (!imageUrl3) formErrors.imageUrl3 = "Image URL 3 is required";
-        if (!imageUrl4) formErrors.imageUrl4 = "Image URL 4 is required";
+        if (!name) formErrors.name = 'Name is required';
+        if (!country) formErrors.country = 'Country is required';
+        if (!address) formErrors.address = 'Address is required';
+        if (!city) formErrors.city = 'City is required';
+        if (!state) formErrors.state = 'State is required';
+        if (!latitude) formErrors.latitude = 'Latitude is required';
+        if (!longitude) formErrors.longitude = 'Longitude is required';
+        if (!description) formErrors.description = 'Description is required';
+        if (!price) formErrors.price = 'Price is required';
+        if (!mainImageUrl) formErrors.mainImageUrl = 'Main Image URL is required';
+        if (!imageUrl1) formErrors.imageUrl1 = 'Image URL 1 is required';
+        if (!imageUrl2) formErrors.imageUrl2 = 'Image URL 2 is required';
+        if (!imageUrl3) formErrors.imageUrl3 = 'Image URL 3 is required';
+        if (!imageUrl4) formErrors.imageUrl4 = 'Image URL 4 is required';
 
-        // technical errors
-        if (description.length <= 30)
-            formErrors.description = "Description is too short";
+        if (description.length <= 30) formErrors.description = 'Description is too short';
 
         setErrors(formErrors);
-    }, [
-        name,
-        country,
-        address,
-        city,
-        state,
-        latitude,
-        longitude,
-        description,
-        price,
-        mainImageUrl,
-        imageUrl1,
-        imageUrl2,
-        imageUrl3,
-        imageUrl4
-    ]);
+    }, [name, country, address, city, state, latitude, longitude, description, price, mainImageUrl, imageUrl1, imageUrl2, imageUrl3, imageUrl4]);
 
     const handleSubmit = async e => {
         e.preventDefault();
         setHasSubmitted(true);
 
+        if (Object.keys(errors).length > 0) return;
+
         const spotBody = {
             ownerId: currUser.id,
-            name: name,
-            country: country,
-            address: address,
-            city: city,
-            state: state,
+            name,
+            country,
+            address,
+            city,
+            state,
             lat: latitude,
             lng: longitude,
-            description: description,
-            price: price
-        }
+            description,
+            price
+        };
 
-        const createdSpot = await dispatch(postSpot(spotBody));
+        const updatedSpot = await dispatch(editSpot(spotBody, spotToUpdate.id));
 
-        navigate(`/spots/${createdSpot.id}`, {replace: true})
+        navigate(`/spots/${updatedSpot.id}`);
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <h1> Create a new Spot</h1>
+            <h1> Update Spot</h1>
             <div className="location-info">
                 <div className="location-guide">
                     <h2> Where&apos;s your place located?</h2>
@@ -278,10 +291,10 @@ const CreateSpot = () => {
                 </div>
             </div>
             <button type="submit" className="submit-button">
-                Create Spot
+                Update Spot
             </button>
         </form>
-    );
-};
+    )
+}
 
-export default CreateSpot;
+export default EditSpot

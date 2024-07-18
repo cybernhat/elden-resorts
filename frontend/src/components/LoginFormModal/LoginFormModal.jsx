@@ -11,6 +11,7 @@ function LoginFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
   const [loginErrors, setLoginErrors] = useState({})
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
