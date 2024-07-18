@@ -19,6 +19,12 @@ const ManageSpot = () => {
     return (
         <div>
             <h1>Manage Your Spots</h1>
+            <button>
+                    <NavLink to='/spots/create'>
+                    Create a Spot
+                    </NavLink>
+            </button>
+            {spots && spots.length? (
             <ul id="spot-list">
                 {spots.map((spot) =>
                     spot && spot.id ? (
@@ -56,7 +62,11 @@ const ManageSpot = () => {
                         </li>
                     ) : null
                 )}
-            </ul>
+            </ul> ) :
+            <div id='no-spot-container'>
+                <h2>No spots yet</h2>
+            </div>
+            }
         </div>
     );
 };

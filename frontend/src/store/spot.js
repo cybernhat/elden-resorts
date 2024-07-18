@@ -45,7 +45,22 @@ const getSpotByCurrentUser = (spots) => {
         payload: spots
     }
 }
+
+// const DELETE_SPOT = 'spot/deleteSpot'
+
+// const deleteSpot = (spot) => {
+//     return {
+//         type: DELETE_SPOT,
+//         payload: spot
+//     }
+// }
 // thunks
+// export const destroySpot = (spotId) => async dispatch => {
+//     const response = await fetch(`/api/spots/${spotId}`);
+
+
+// }
+
 export const fetchAllSpots = () => async dispatch => {
     const response = await fetch('/api/spots');
 

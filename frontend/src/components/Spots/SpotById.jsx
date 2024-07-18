@@ -42,6 +42,7 @@ const SpotById = () => {
 
     const spot = useSelector((state) => state.spots[spotId]);
     const reviews = useSelector((state) => state.reviews);
+    const user = useSelector((state) => state.session.user);
 
     if (!spot) return <h1>Loading...</h1>;
 
@@ -136,10 +137,8 @@ const SpotById = () => {
                                     <h3>{spot.avgRating}</h3>
                                 )}
                             </div>
-                            {spot.numReviews === "no reviews yet" ? (
-                                null
-                            ) : (
-                                <div className='review-dot'>
+                            {spot.numReviews === "no reviews yet" ? null : (
+                                <div className="review-dot">
                                     <h3>•</h3>
                                     <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
                                 </div>
@@ -169,6 +168,9 @@ const SpotById = () => {
                     ) : (
                         <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
                     )}
+                    {spot && user && user.id !== spot.ownerId ? (
+                        <button>Add Review</button>
+                    ) : null}
                 </div>
                 {reviews.reviews && reviews.reviews.length > 0 ? (
                     reviews.reviews
@@ -176,7 +178,7 @@ const SpotById = () => {
                         .sort(
                             (a, b) =>
                                 new Date(a.createdAt) - new Date(b.createdAt)
-                        ) // Sort by createdAt date
+                        )
                         .map((review) => (
                             <div key={review.id} className="reviewCard">
                                 <h3>{review.User.firstName}</h3>
@@ -185,7 +187,11 @@ const SpotById = () => {
                             </div>
                         ))
                 ) : (
-                    <p>No reviews available.</p>
+                    <p>
+                        {spot && user && user.id !== spot.ownerId
+                            ? "Be the first to post a review!"
+                            : "No reviews available."}
+                    </p>
                 )}
             </div>
         </div>

@@ -25,6 +25,22 @@ function LoginFormModal() {
       });
   };
 
+  const handleDemoLogin = async () => {
+    const demoCredential = 'DemoUser';
+    const demoPassword = 'password';
+
+    try {
+      setCredential(demoCredential);
+      setPassword(demoPassword);
+      setErrors({});
+
+      await dispatch(sessionActions.login({ credential: demoCredential, password: demoPassword }));
+      closeModal();
+    } catch (err) {
+      console.error('Demo login failed:', err);
+    }
+  };
+
   useEffect(() => {
     const loginErrors = {}
 
@@ -61,6 +77,7 @@ function LoginFormModal() {
         {errors.credential && <p>{errors.credential}</p>}
         <button type="submit" disabled={Object.keys(loginErrors).length}>Log In</button>
       </form>
+      <button type='button' onClick={handleDemoLogin}>Demo User Login</button>
     </>
   );
 }
