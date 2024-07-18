@@ -12,10 +12,10 @@ const getSpots = (spots) => {
 
 const GET_SPOT_BY_ID = 'spot/getSpotId'
 
-const getSpotById = (spotId) => {
+const getSpotById = (spot) => {
     return {
         type: GET_SPOT_BY_ID,
-        payload: spotId
+        payload: spot
     }
 }
 
@@ -28,6 +28,14 @@ const createSpot = (spot) => {
     }
 }
 
+const GET_SPOT_BY_CURRENT_USER = 'spot/getSpotByCurrentUser'
+
+const getSpotByCurrentUser = (spots) => {
+    return {
+        type: GET_SPOT_BY_CURRENT_USER,
+        payload: spots
+    }
+}
 // thunks
 export const fetchAllSpots = () => async dispatch => {
     const response = await fetch('/api/spots');
@@ -49,13 +57,23 @@ export const fetchSpotById = (spotId) => async dispatch => {
     if (response.ok) {
         const data = await response.json();
 
-
         dispatch(getSpotById(data))
 
         return data;
     }
 }
 
+export const fetchSpotByCurrentUser = () => async dispatch => {
+    const response = await csrfFetch('/api/spots/current');
+
+    if (response.ok) {
+        const data = await response.json();
+
+        dispatch(getSpotByCurrentUser(data));
+
+        return data;
+    }
+}
 export const postSpot = (spot) => async dispatch => {
     const response = await csrfFetch('/api/spots',
     {
@@ -71,7 +89,7 @@ export const postSpot = (spot) => async dispatch => {
         const newSpot = await response.json();
 
         dispatch(createSpot(newSpot))
-        console.log('newSpotThunk', newSpot)
+
         return newSpot;
 
     }
@@ -99,6 +117,13 @@ const spotReducer = (state = initialState, action) => {
                 ...state,
                 [action.payload.id]: action.payload
             };
+        }
+        case GET_SPOT_BY_CURRENT_USER: {
+        const newState = {};
+           action.payload.Spots.forEach(spot => {
+                newState[spot.id] = spot
+            })
+            return newState
         }
         default:
             return state

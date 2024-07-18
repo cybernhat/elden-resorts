@@ -227,6 +227,7 @@ const CreateSpot = () => {
                 </div>
                 <label htmlFor="price">$</label>
                 <input
+                    placeholder='Price per night (USD)'
                     type="number"
                     value={price}
                     id="price"

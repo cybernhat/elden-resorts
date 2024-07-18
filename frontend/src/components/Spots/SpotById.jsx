@@ -11,21 +11,31 @@ const SpotById = () => {
     const { spotId } = useParams();
 
     useEffect(() => {
-        dispatch(fetchSpotById(spotId))
-        dispatch(fetchReviews(spotId))
+        dispatch(fetchSpotById(spotId));
+        dispatch(fetchReviews(spotId));
     }, [dispatch, spotId]);
 
     const formatDate = (dateString) => {
-        const [datePart, timePart] = dateString.split(' ');
-        const [year, month, day] = datePart.split('-').map(part => part.padStart(2, '0'));
-        const [hour, minute, second] = timePart.split(':').map(part => part.padStart(2, '0'));
+        const [datePart, timePart] = dateString.split(" ");
+        const [year, month, day] = datePart
+            .split("-")
+            .map((part) => part.padStart(2, "0"));
+        const [hour, minute, second] = timePart
+            .split(":")
+            .map((part) => part.padStart(2, "0"));
 
-        const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        const timeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+        const date = new Date(
+            `${year}-${month}-${day}T${hour}:${minute}:${second}`
+        );
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        const timeOptions = {
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        };
 
-        const formattedDate = date.toLocaleDateString('en-US', options);
-        const formattedTime = date.toLocaleTimeString('en-US', timeOptions);
+        const formattedDate = date.toLocaleDateString("en-US", options);
+        const formattedTime = date.toLocaleTimeString("en-US", timeOptions);
 
         return `${formattedDate} @ ${formattedTime}`;
     };
@@ -35,6 +45,7 @@ const SpotById = () => {
 
     if (!spot) return <h1>Loading...</h1>;
 
+    console.log("spot", spot);
     return (
         <div>
             <div id="spot-card">
@@ -49,7 +60,12 @@ const SpotById = () => {
                             src={spot.previewImages[0].url}
                             className="main-image"
                         />
-                    ) : null}
+                    ) : (
+                        <img
+                            className="main-images-placeholder"
+                            src="https://hips.hearstapps.com/hmg-prod/images/bojnice-castle-1603142898.jpg?crop=0.668xw:1.00xh;0.116xw,0&resize=980:*"
+                        />
+                    )}
                     <div className="sub-images-container">
                         {spot.previewImages && spot.previewImages[1] ? (
                             <img
@@ -114,10 +130,20 @@ const SpotById = () => {
                         <div id="price-review-container">
                             <h3>{spot.price} per night</h3>
                             <div id="rating-container">
-                                <GiJusticeStar className="star-icon" />
-                                <h3>{spot.avgRating}</h3>
+                                {spot.avgRating === "no ratings yet" ? (
+                                    <h3>New Spot!</h3>
+                                ) : (
+                                    <h3>{spot.avgRating}</h3>
+                                )}
                             </div>
-                            <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
+                            {spot.numReviews === "no reviews yet" ? (
+                                null
+                            ) : (
+                                <div className='review-dot'>
+                                    <h3>•</h3>
+                                    <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
+                                </div>
+                            )}
                         </div>
                         <button className="reserve-button">Reserve</button>
                     </div>
@@ -126,22 +152,38 @@ const SpotById = () => {
                     <h1>{reviews.id}</h1>
                 </div>
             </div>
-            <div id='reviews-card'>
+            <div id="reviews-card">
                 <div id="review-heading">
                     <div id="rating-container">
                         <GiJusticeStar className="star-icon" />
-                        <h3>{spot.avgRating}</h3>
+                        {spot.avgRating === "no ratings yet" ? (
+                            <h3>New Spot!</h3>
+                        ) : (
+                            <h3>{spot.avgRating}</h3>
+                        )}
                     </div>
-                    <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
+                    {spot.numReviews === 0 ? (
+                        <h3 className="reviews">No reviews yet</h3>
+                    ) : spot.numReviews === 1 ? (
+                        <h3 className="reviews">{`${spot.numReviews} review`}</h3>
+                    ) : (
+                        <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
+                    )}
                 </div>
                 {reviews.reviews && reviews.reviews.length > 0 ? (
-                    reviews.reviews.map(review => (
-                        <div key={review.id} className='reviewCard'>
-                            <h3>{review.User.firstName}</h3>
-                            <span>{formatDate(review.createdAt)}</span>
-                            <h4>{review.review}</h4>
-                        </div>
-                    ))
+                    reviews.reviews
+                        .slice()
+                        .sort(
+                            (a, b) =>
+                                new Date(a.createdAt) - new Date(b.createdAt)
+                        ) // Sort by createdAt date
+                        .map((review) => (
+                            <div key={review.id} className="reviewCard">
+                                <h3>{review.User.firstName}</h3>
+                                <span>{formatDate(review.createdAt)}</span>
+                                <h4>{review.review}</h4>
+                            </div>
+                        ))
                 ) : (
                     <p>No reviews available.</p>
                 )}

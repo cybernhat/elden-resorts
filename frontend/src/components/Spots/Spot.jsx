@@ -20,7 +20,7 @@ const Spots = () => {
           {spots.map(spot => (
               spot && spot.id ? (
                   <li id='spot-item' key={spot.id}>
-                      <NavLink id='nav-link' to={`spots/${spot.id}`}>
+                      <NavLink id='nav-link' to={`/spots/${spot.id}`}>
                           <img className='spot-image' src={spot.previewImage} alt={`${spot.name} preview`} />
                           <div className='info'>
                               <h2>{`${spot.city}, ${spot.state}`}</h2>
