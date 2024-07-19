@@ -26,6 +26,7 @@ function SignupFormModal() {
     setSignUpErrors(signUpErrors)
   }, [email, username, firstName, lastName, password, confirmPassword, errors])
 
+  console.log('fsafsa', signUpErrors);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -117,7 +118,7 @@ function SignupFormModal() {
           />
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit" disabled={Object.keys(signUpErrors)}>Sign Up</button>
+        <button type="submit" disabled={Object.keys(signUpErrors).length}>Sign Up</button>
       </form>
     </>
   );
