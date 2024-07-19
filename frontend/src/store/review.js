@@ -27,6 +27,14 @@ const deleteReview = (review) => {
     }
 
 }
+
+const RESET_REVIEWS = "reviews/resetReviews";
+
+const resetReviews = () => {
+    return {
+        type: RESET_REVIEWS
+    };
+};
 //thunks
 
 export const destroyReview = (reviewId) => async (dispatch) => {
@@ -59,14 +67,12 @@ export const postReview = (spotId, review) => async dispatch => {
 }
 
 export const fetchReviews = (spotId) => async (dispatch) => {
+    dispatch(resetReviews());
     const response = await fetch(`/api/spots/${spotId}/reviews`);
 
     if (response.ok) {
-
         const data = await response.json();
-
         dispatch(getReviews(data));
-
         return data;
     }
 };
@@ -76,21 +82,24 @@ const initialState = {};
 const reviewReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_REVIEWS: {
-            const newState = {
-                ...state,
-                reviews: action.payload };
+            const newState = { ...state};
+            action.payload.forEach((review) => {
+                newState[review.id] = review;
+            });
             return newState;
         }
         case POST_REVIEW: {
-            return {
-                ...state,
+            return {...state,
                 [action.payload.id]: action.payload
-            }
+             }
         }
         case DELETE_REVIEW: {
             const newState = { ...state };
             delete newState[action.payload];
             return newState;
+        }
+        case RESET_REVIEWS: {
+            return {};
         }
         default:
             return state;

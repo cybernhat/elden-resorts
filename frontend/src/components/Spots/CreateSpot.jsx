@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import { postSpot } from '../../store/spot';
-import { useDispatch, useSelector } from 'react-redux';
-import './CreateSpot.css';
-import { createSpotImages } from '../../store/spot';
+import { useNavigate } from "react-router-dom";
+import { postSpot } from "../../store/spot";
+import { useDispatch, useSelector } from "react-redux";
+import "./CreateSpot.css";
+import { createSpotImages } from "../../store/spot";
 
 const CreateSpot = () => {
-    const currUser = useSelector(state => state.session.user);
+    const currUser = useSelector((state) => state.session.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [name, setName] = useState('Cool Place')
-    const [country, setCountry] = useState("USA");
-    const [address, setAddress] = useState("123 1st Ave");
-    const [city, setCity] = useState("Oakland");
-    const [state, setState] = useState("CA");
-    const [latitude, setLatitude] = useState("50.1234");
-    const [longitude, setLongitude] = useState("100.1234");
-    const [description, setDescription] = useState("Very nice place, in the hood, you can hear gunshots and it will sound like fireworks. Great for family and fun!");
-    const [price, setPrice] = useState(199.99);
-    const [mainImageUrl, setMainImageUrl] = useState("https://picsum.photos/300/300?random=1");
-    const [imageUrl1, setImageUrl1] = useState("https://picsum.photos/300/300?random=2");
-    const [imageUrl2, setImageUrl2] = useState("https://picsum.photos/300/300?random=3");
-    const [imageUrl3, setImageUrl3] = useState("https://picsum.photos/300/300?random=4");
-    const [imageUrl4, setImageUrl4] = useState("https://picsum.photos/300/300?random=5");
+    const [name, setName] = useState("");
+    const [country, setCountry] = useState("");
+    const [address, setAddress] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
+    const [description, setDescription] = useState("");
+    const [price, setPrice] = useState(0);
+    const [mainImageUrl, setMainImageUrl] = useState("");
+    const [imageUrl1, setImageUrl1] = useState("");
+    const [imageUrl2, setImageUrl2] = useState("");
+    const [imageUrl3, setImageUrl3] = useState("");
+    const [imageUrl4, setImageUrl4] = useState("");
     const [errors, setErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -31,7 +31,7 @@ const CreateSpot = () => {
         let formErrors = {};
 
         // error if field is empty
-        if (!name) formErrors.name = 'Name is required'
+        if (!name) formErrors.name = "Name is required";
         if (!country) formErrors.country = "Country is required";
         if (!address) formErrors.address = "Address is required";
         if (!city) formErrors.city = "City is required";
@@ -42,10 +42,6 @@ const CreateSpot = () => {
         if (!price) formErrors.price = "Price is required";
         if (!mainImageUrl)
             formErrors.mainImageUrl = "Main Image URL is required";
-        if (!imageUrl1) formErrors.imageUrl1 = "Image URL 1 is required";
-        if (!imageUrl2) formErrors.imageUrl2 = "Image URL 2 is required";
-        if (!imageUrl3) formErrors.imageUrl3 = "Image URL 3 is required";
-        if (!imageUrl4) formErrors.imageUrl4 = "Image URL 4 is required";
 
         // technical errors
         if (description.length <= 30)
@@ -65,9 +61,13 @@ const CreateSpot = () => {
         mainImageUrl,
     ]);
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setHasSubmitted(true);
+
+        if (Object.keys(errors).length > 0) {
+            return;
+        }
 
         const spotBody = {
             ownerId: currUser.id,
@@ -79,26 +79,28 @@ const CreateSpot = () => {
             lat: latitude,
             lng: longitude,
             description: description,
-            price: price
-        }
+            price: price,
+        };
 
         let createdSpot = await dispatch(postSpot(spotBody));
 
         let imageBody = [
-            {spotId: createdSpot.id, preview: true, url: mainImageUrl},
-            {spotId: createdSpot.id, preview: false, url: imageUrl1},
-            {spotId: createdSpot.id, preview: false, url: imageUrl2},
-            {spotId: createdSpot.id, preview: false, url: imageUrl3},
-            {spotId: createdSpot.id, preview: false, url: imageUrl4}
+            { spotId: createdSpot.id, preview: true, url: mainImageUrl },
+            { spotId: createdSpot.id, preview: false, url: imageUrl1 },
+            { spotId: createdSpot.id, preview: false, url: imageUrl2 },
+            { spotId: createdSpot.id, preview: false, url: imageUrl3 },
+            { spotId: createdSpot.id, preview: false, url: imageUrl4 },
         ];
 
-        await Promise.all(imageBody.map(image => dispatch(createSpotImages(image))))
+        await Promise.all(
+            imageBody.map((image) => dispatch(createSpotImages(image)))
+        );
 
-        navigate(`/spots/${createdSpot.id}`, {replace: true})
+        navigate(`/spots/${createdSpot.id}`, { replace: true });
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form id="create-form" onSubmit={handleSubmit}>
             <h1> Create a new Spot</h1>
             <div className="location-info">
                 <div className="location-guide">
@@ -132,7 +134,7 @@ const CreateSpot = () => {
                         <span>{errors.address}</span>
                     )}
                     <div className="city-state">
-                        <label htmlFor="city">City</label>,
+                        <label htmlFor="city">City</label>
                         <input
                             type="text"
                             value={city}
@@ -201,21 +203,22 @@ const CreateSpot = () => {
                     <span>{errors.description}</span>
                 )}
             </div>
-            <div className='title-info'>
-                <div className='title-guide'>
+            <div className="title-info">
+                <div className="title-guide">
                     <h2>Create a title for your spot</h2>
-                    <h3>Catch guests&apos; attention with a spot title that highlights what makes your place special.</h3>
+                    <h3>
+                        Catch guests&apos; attention with a spot title that
+                        highlights what makes your place special.
+                    </h3>
                 </div>
                 <input
-                    placeholder='Name of your spot'
+                    placeholder="Name of your spot"
                     value={name}
-                    id='name'
-                    name='name'
-                    onChange={e => setName(e.target.value)}
+                    id="name"
+                    name="name"
+                    onChange={(e) => setName(e.target.value)}
                 />
-                {hasSubmitted && errors.name && (
-                    <span>{errors.name}</span>
-                )}
+                {hasSubmitted && errors.name && <span>{errors.name}</span>}
             </div>
             <div className="price-info">
                 <div className="price-guide">
@@ -227,7 +230,7 @@ const CreateSpot = () => {
                 </div>
                 <label htmlFor="price">$</label>
                 <input
-                    placeholder='Price per night (USD)'
+                    placeholder="Price per night (USD)"
                     type="number"
                     value={price}
                     id="price"
@@ -245,16 +248,18 @@ const CreateSpot = () => {
                     </h3>
                 </div>
                 <div className="photo-urls">
-                    <input
-                        type="url"
-                        placeholder="preview Image URL"
-                        value={mainImageUrl}
-                        name="url"
-                        onChange={(e) => setMainImageUrl(e.target.value)}
-                    />
-                    {hasSubmitted && errors.mainImageUrl && (
-                        <span>{errors.mainImageUrl}</span>
-                    )}
+                    <div id="main-image-container">
+                        <input
+                            type="url"
+                            placeholder="Preview Image URL"
+                            value={mainImageUrl}
+                            name="url"
+                            onChange={(e) => setMainImageUrl(e.target.value)}
+                        />
+                        {hasSubmitted && errors.mainImageUrl && (
+                            <span>{errors.mainImageUrl}</span>
+                        )}
+                    </div>
                     <input
                         type="url"
                         placeholder="Image URL"
@@ -273,14 +278,13 @@ const CreateSpot = () => {
                         type="url"
                         placeholder="Image URL"
                         value={imageUrl3}
-                        name="url"
+                        name="ur"
                         onChange={(e) => setImageUrl3(e.target.value)}
-                    />{" "}
+                    />
                     <input
                         type="url"
                         placeholder="Image URL"
                         value={imageUrl4}
-                        name="url"
                         onChange={(e) => setImageUrl4(e.target.value)}
                     />
                 </div>

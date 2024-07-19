@@ -3,8 +3,10 @@ import "./ReviewModal.css";
 import { GiJusticeStar } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { postReview } from "../../store/review";
+import { useModal } from '../../context/Modal';
 
 const ReviewModal = ( {spotId} ) => {
+    const { closeModal } = useModal();
     const dispatch = useDispatch();
     const [review, setReview] = useState("");
     const [rating, setRating] = useState(0);
@@ -43,7 +45,7 @@ const ReviewModal = ( {spotId} ) => {
 
         const newReview = await dispatch(postReview(spotId, reviewBody));
         if (newReview) {
-            window.location.reload()
+            closeModal();
         }
     };
 

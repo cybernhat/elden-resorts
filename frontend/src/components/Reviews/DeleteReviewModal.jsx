@@ -10,12 +10,12 @@ const DeleteReviewModal = ({ reviewId }) => {
     const handleDeleteReview = e => {
         e.preventDefault();
         dispatch(destroyReview(reviewId));
-        window.location.reload()
+
+        closeModal();
     }
 
     const handleKeepReview = e => {
         e.preventDefault();
-        closeModal();
     }
 
     return (

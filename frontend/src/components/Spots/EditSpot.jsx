@@ -263,28 +263,24 @@ const EditSpot = () => {
                     <input
                         type="url"
                         placeholder="Image URL"
-                        value={imageUrl1}
                         name="url"
                         onChange={(e) => setImageUrl1(e.target.value)}
                     />
                     <input
                         type="url"
                         placeholder="Image URL"
-                        value={imageUrl2}
                         name="url"
                         onChange={(e) => setImageUrl2(e.target.value)}
                     />
                     <input
                         type="url"
                         placeholder="Image URL"
-                        value={imageUrl3}
                         name="url"
                         onChange={(e) => setImageUrl3(e.target.value)}
                     />{" "}
                     <input
                         type="url"
                         placeholder="Image URL"
-                        value={imageUrl4}
                         name="url"
                         onChange={(e) => setImageUrl4(e.target.value)}
                     />

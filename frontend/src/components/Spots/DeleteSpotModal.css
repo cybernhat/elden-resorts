@@ -1,0 +1,36 @@
+.delete-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items:center;
+    margin: 20px;
+}
+
+#delete-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.delete-button {
+    background-color: #ff6f6f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.keep-button {
+    background-color: #d3d3d3;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.delete-button:hover, .keep-button:hover {
+    opacity: 0.8;
+}

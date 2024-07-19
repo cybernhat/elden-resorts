@@ -14,15 +14,13 @@ const Spots = () => {
         dispatch(fetchAllSpots());
     }, [dispatch]);
 
-    console.log("BBBBBBBBBBBBBBBBBBBB", spots);
-
     return (
         <div>
             <ul id="spot-list">
                 {spots.map((spot) =>
                     spot && spot.id ? (
                         <li id="spot-item" key={spot.id}>
-                            <NavLink to={`/spots/${spot.id}`}className="tooltip">
+                            <NavLink to={`/spots/${spot.id}`} className="tooltip">
                             <h1>
                             {spot.name}
                             </h1>

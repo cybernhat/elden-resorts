@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import { GiJusticeStar } from "react-icons/gi";
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
 import DeleteSpotModal from './DeleteSpotModal';
-import './ManageSpot';
+import './ManageSpot.css';
 
 const ManageSpot = () => {
     const dispatch = useDispatch();
@@ -18,13 +18,13 @@ const ManageSpot = () => {
     const user = useSelector((state) => state.session.user);
 
     const spots = Object.values(spotsObj);
-    
+
     console.log('ZZZZZZZZZZ', user);
 
     return (
-        <div>
+        <div id='manage-spot-container'>
             <h1>Manage Your Spots</h1>
-            <button>
+            <button id='button-container'>
                     <NavLink to='/spots/create'>
                     Create a Spot
                     </NavLink>

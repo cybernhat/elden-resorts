@@ -11,13 +11,28 @@ import ReviewModal from "../Reviews/ReviewModal";
 import DeleteReviewModal from "../Reviews/DeleteReviewModal";
 
 const SpotById = () => {
-    const dispatch = useDispatch();
     const { spotId } = useParams();
+
+    const spot = useSelector((state) => state.spots[spotId]);
+    const reviewsObject = useSelector((state) => state.reviews);
+    const user = useSelector((state) => state.session.user);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchSpotById(spotId))
+        dispatch(fetchReviews(spotId))
+    }, [dispatch, spotId]);
 
     useEffect(() => {
         dispatch(fetchSpotById(spotId));
-        dispatch(fetchReviews(spotId));
-    }, [dispatch, spotId]);
+    }, [reviewsObject, spotId, dispatch]);
+
+    const reviews = Object.values(reviewsObject);
+
+    const userHasReviewed =
+        reviewsObject && user
+            ? reviews.find((review) => review.userId === user.id)
+            : false;
 
     const formatDate = (dateString) => {
         const [datePart, timePart] = dateString.split(" ");
@@ -43,15 +58,6 @@ const SpotById = () => {
 
         return `${formattedDate} @ ${formattedTime}`;
     };
-
-    const spot = useSelector((state) => state.spots[spotId]);
-    const reviews = useSelector((state) => state.reviews);
-    const user = useSelector((state) => state.session.user);
-
-    const userHasReviewed =
-        reviews.reviews && user
-            ? reviews.reviews.find((review) => review.userId === user.id)
-            : false;
 
     if (!spot) return <h1>Loading...</h1>;
 
@@ -104,14 +110,19 @@ const SpotById = () => {
                                 ? `Hosted by ${spot.Owner.firstName} ${spot.Owner.lastName}`
                                 : "Host information not available"}
                         </h1>
-                        <span>{spot.description}</span>
+                        <h4>{spot.description}</h4>
                     </div>
                     <div id="reserve-container">
                         <div id="price-review-container">
-                            <h3>{spot.price} per night</h3>
+                            <h3 className="price-night">
+                                ᚠ{spot.price} per night
+                            </h3>
                             <div id="rating-container">
                                 {typeof spot.avgRating === "number" ? (
-                                    <h3>{spot.avgRating.toFixed(1)}</h3>
+                                    <div className="reserve-star">
+                                        <GiJusticeStar className='spot-star-icon'/>
+                                        <h3>{spot.avgRating.toFixed(1)}</h3>
+                                    </div>
                                 ) : (
                                     <h3>New Spot!</h3>
                                 )}
@@ -137,20 +148,21 @@ const SpotById = () => {
             </div>
             <div id="reviews-card">
                 <div id="review-heading">
-                    <div id="rating-container">
-                        <GiJusticeStar className="star-icon" />
+                    <div id="review-rating-container">
                         {typeof spot.avgRating === "number" ? (
-                            <h3>{spot.avgRating.toFixed(1)}</h3>
+                            <div id='review-star-container'>
+                                <GiJusticeStar className="star-icon" />
+                                <h3>{spot.avgRating.toFixed(1)}</h3>
+                            </div>
                         ) : (
                             <h3>New Spot!</h3>
                         )}
                     </div>
-
                     {spot.numReviews === 0 ? (
                         <h3 className="reviews">No reviews yet</h3>
                     ) : spot.numReviews === 1 ? (
                         <h3 className="reviews">{`${spot.numReviews} review`}</h3>
-                    ) : spot.NumReviews > 1 ? (
+                    ) : spot.numReviews > 1 ? (
                         <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
                     ) : null}
                     {spot &&
@@ -165,39 +177,44 @@ const SpotById = () => {
                         </button>
                     ) : null}
                 </div>
-                {reviews.reviews && reviews.reviews.length > 0 ? (
-                    reviews.reviews
-                        .slice()
-                        .sort(
-                            (a, b) =>
-                                new Date(b.createdAt) - new Date(a.createdAt)
-                        )
-                        .map((review) => (
-                            <div key={review.id} className="reviewCard">
-                                <h3>{review.User.firstName}</h3>
-                                <span>{formatDate(review.createdAt)}</span>
-                                <h4>{review.review}</h4>
-                                {user && user.id === review.userId ? (
-                                    <button id="delete-review-button">
-                                        <OpenModalMenuItem
-                                            itemText="Delete"
-                                            modalComponent={
-                                                <DeleteReviewModal
-                                                    reviewId={review.id}
-                                                />
-                                            }
-                                        />
-                                    </button>
-                                ) : null}
-                            </div>
-                        ))
-                ) : (
-                    <p>
-                        {spot && user && user.id !== spot.ownerId
-                            ? "Be the first to post a review!"
-                            : "No reviews available."}
-                    </p>
-                )}
+                <div id="comment-card">
+                    {Object.values(reviews).length > 0 ? (
+                        reviews
+                            .slice()
+                            .sort(
+                                (a, b) =>
+                                    new Date(b.createdAt) -
+                                    new Date(a.createdAt)
+                            )
+                            .map((review) => (
+                                <div key={review.id} className="reviewCard">
+                                    <h3>
+                                        {review.User?.firstName || "Anonymous"}
+                                    </h3>
+                                    <span>{formatDate(review.createdAt)}</span>
+                                    <h4>{review.review}</h4>
+                                    {user && user.id === review.userId ? (
+                                        <button id="delete-review-button">
+                                            <OpenModalMenuItem
+                                                itemText="Delete"
+                                                modalComponent={
+                                                    <DeleteReviewModal
+                                                        reviewId={review.id}
+                                                    />
+                                                }
+                                            />
+                                        </button>
+                                    ) : null}
+                                </div>
+                            ))
+                    ) : (
+                        <p>
+                            {spot && user && user.id !== spot.ownerId
+                                ? "Be the first to post a review!"
+                                : "No reviews available."}
+                        </p>
+                    )}
+                </div>
             </div>
         </div>
     );

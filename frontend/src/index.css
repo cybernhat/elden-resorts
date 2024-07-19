@@ -28,3 +28,17 @@ body {
     width: 100%;
     flex: 1; /* Make #root take up the remaining space in the body */
 }
+
+h1, h2, h3, h4,span {
+    color: var(--text-color);
+    margin-top: 10px;
+  }
+
+  h3 {
+    font-weight: normal;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }

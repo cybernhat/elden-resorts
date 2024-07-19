@@ -1,0 +1,93 @@
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+
+  .location-info, .description-info, .title-info, .price-info, .photo-info {
+    margin-bottom: 20px;
+  }
+
+  .location-guide, .description-guide, .title-guide, .price-guide, .photo-guide {
+    margin-bottom: 10px;
+  }
+
+  input, textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    margin-top: 15px
+  }
+
+  .city-state, .lat-lng {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .city-state div, .lat-lng div {
+    flex: 1;
+  }
+
+  textarea {
+    height: 100px;
+    resize: none;
+  }
+
+  .submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--text-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .submit-button:hover {
+    background-color: var(--text-color);
+  }
+
+  span {
+    font-size: 12px;
+  }
+
+  .photo-urls input {
+    margin-bottom: 5px;
+  }
+
+  #main-image-container {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .city-state, .lat-lng {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .city-state div, .lat-lng div {
+      width: 100%;
+    }
+  }
