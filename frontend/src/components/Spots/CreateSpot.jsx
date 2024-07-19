@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { postSpot } from '../../store/spot';
 import { useDispatch, useSelector } from 'react-redux';
+import './CreateSpot.css';
+import { createSpotImages } from '../../store/spot';
 
 const CreateSpot = () => {
     const currUser = useSelector(state => state.session.user);
@@ -61,10 +63,6 @@ const CreateSpot = () => {
         description,
         price,
         mainImageUrl,
-        imageUrl1,
-        imageUrl2,
-        imageUrl3,
-        imageUrl4
     ]);
 
     const handleSubmit = async e => {
@@ -84,7 +82,17 @@ const CreateSpot = () => {
             price: price
         }
 
-        const createdSpot = await dispatch(postSpot(spotBody));
+        let createdSpot = await dispatch(postSpot(spotBody));
+
+        let imageBody = [
+            {spotId: createdSpot.id, preview: true, url: mainImageUrl},
+            {spotId: createdSpot.id, preview: false, url: imageUrl1},
+            {spotId: createdSpot.id, preview: false, url: imageUrl2},
+            {spotId: createdSpot.id, preview: false, url: imageUrl3},
+            {spotId: createdSpot.id, preview: false, url: imageUrl4}
+        ];
+
+        await Promise.all(imageBody.map(image => dispatch(createSpotImages(image))))
 
         navigate(`/spots/${createdSpot.id}`, {replace: true})
     };

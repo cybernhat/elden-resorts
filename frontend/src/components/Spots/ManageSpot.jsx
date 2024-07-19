@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSpotByCurrentUser } from "../../store/spot";
-import "./Spot.css";
 import { NavLink } from "react-router-dom";
 import { GiJusticeStar } from "react-icons/gi";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import DeleteSpotModal from './DeleteSpotModal';
+import './ManageSpot';
 
 const ManageSpot = () => {
     const dispatch = useDispatch();
@@ -13,8 +15,11 @@ const ManageSpot = () => {
     }, [dispatch]);
 
     const spotsObj = useSelector((state) => state.spots);
+    const user = useSelector((state) => state.session.user);
 
     const spots = Object.values(spotsObj);
+    
+    console.log('ZZZZZZZZZZ', user);
 
     return (
         <div>
@@ -56,7 +61,10 @@ const ManageSpot = () => {
                                     </NavLink>
                                 </button>
                                 <button className="manage-button">
-                                    Delete
+                                    <OpenModalMenuItem
+                                    itemText='Delete'
+                                    modalComponent={<DeleteSpotModal spotId={spot.id}/>}
+                                    />
                                 </button>
                             </div>
                         </li>

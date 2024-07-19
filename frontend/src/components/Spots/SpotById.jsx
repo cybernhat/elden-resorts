@@ -5,6 +5,10 @@ import { fetchSpotById } from "../../store/spot";
 import "./SpotById.css";
 import { GiJusticeStar } from "react-icons/gi";
 import { fetchReviews } from "../../store/review";
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem";
+import ReserveModal from "./ReserveModal";
+import ReviewModal from "../Reviews/ReviewModal";
+import DeleteReviewModal from "../Reviews/DeleteReviewModal";
 
 const SpotById = () => {
     const dispatch = useDispatch();
@@ -44,11 +48,15 @@ const SpotById = () => {
     const reviews = useSelector((state) => state.reviews);
     const user = useSelector((state) => state.session.user);
 
+    const userHasReviewed =
+        reviews.reviews && user
+            ? reviews.reviews.find((review) => review.userId === user.id)
+            : false;
+
     if (!spot) return <h1>Loading...</h1>;
 
-    console.log("spot", spot);
     return (
-        <div>
+        <div id="container">
             <div id="spot-card">
                 <h1>{spot.name}</h1>
                 <h2>
@@ -61,61 +69,32 @@ const SpotById = () => {
                             src={spot.previewImages[0].url}
                             className="main-image"
                         />
-                    ) : (
-                        <img
-                            className="main-images-placeholder"
-                            src="https://hips.hearstapps.com/hmg-prod/images/bojnice-castle-1603142898.jpg?crop=0.668xw:1.00xh;0.116xw,0&resize=980:*"
-                        />
-                    )}
+                    ) : null}
                     <div className="sub-images-container">
                         {spot.previewImages && spot.previewImages[1] ? (
                             <img
-                                key={spot.previewImages[1].id}
                                 src={spot.previewImages[1].url}
                                 className="sub-images"
                             />
-                        ) : (
-                            <img
-                                className="sub-images-placeholder"
-                                src="https://hips.hearstapps.com/hmg-prod/images/bojnice-castle-1603142898.jpg?crop=0.668xw:1.00xh;0.116xw,0&resize=980:*"
-                            />
-                        )}
+                        ) : null}
                         {spot.previewImages && spot.previewImages[2] ? (
                             <img
-                                key={spot.previewImages[2].id}
                                 src={spot.previewImages[2].url}
                                 className="sub-images"
                             />
-                        ) : (
-                            <img
-                                className="sub-images-placeholder"
-                                src="https://hips.hearstapps.com/hmg-prod/images/bojnice-castle-1603142898.jpg?crop=0.668xw:1.00xh;0.116xw,0&resize=980:*"
-                            />
-                        )}
+                        ) : null}
                         {spot.previewImages && spot.previewImages[3] ? (
                             <img
-                                key={spot.previewImages[3].id}
                                 src={spot.previewImages[3].url}
                                 className="sub-images"
                             />
-                        ) : (
-                            <img
-                                className="sub-images-placeholder"
-                                src="https://hips.hearstapps.com/hmg-prod/images/bojnice-castle-1603142898.jpg?crop=0.668xw:1.00xh;0.116xw,0&resize=980:*"
-                            />
-                        )}
+                        ) : null}
                         {spot.previewImages && spot.previewImages[4] ? (
                             <img
-                                key={spot.previewImages[4].id}
                                 src={spot.previewImages[4].url}
                                 className="sub-images"
                             />
-                        ) : (
-                            <img
-                                className="sub-images-placeholder"
-                                src="https://hips.hearstapps.com/hmg-prod/images/bojnice-castle-1603142898.jpg?crop=0.668xw:1.00xh;0.116xw,0&resize=980:*"
-                            />
-                        )}
+                        ) : null}
                     </div>
                 </div>
                 <div id="description-reserve-container">
@@ -131,10 +110,10 @@ const SpotById = () => {
                         <div id="price-review-container">
                             <h3>{spot.price} per night</h3>
                             <div id="rating-container">
-                                {spot.avgRating === "no ratings yet" ? (
-                                    <h3>New Spot!</h3>
+                                {typeof spot.avgRating === "number" ? (
+                                    <h3>{spot.avgRating.toFixed(1)}</h3>
                                 ) : (
-                                    <h3>{spot.avgRating}</h3>
+                                    <h3>New Spot!</h3>
                                 )}
                             </div>
                             {spot.numReviews === "no reviews yet" ? null : (
@@ -144,7 +123,12 @@ const SpotById = () => {
                                 </div>
                             )}
                         </div>
-                        <button className="reserve-button">Reserve</button>
+                        <button className="reserve-button">
+                            <OpenModalMenuItem
+                                itemText="Reserve"
+                                modalComponent={<ReserveModal />}
+                            />
+                        </button>
                     </div>
                 </div>
                 <div>
@@ -155,21 +139,30 @@ const SpotById = () => {
                 <div id="review-heading">
                     <div id="rating-container">
                         <GiJusticeStar className="star-icon" />
-                        {spot.avgRating === "no ratings yet" ? (
-                            <h3>New Spot!</h3>
+                        {typeof spot.avgRating === "number" ? (
+                            <h3>{spot.avgRating.toFixed(1)}</h3>
                         ) : (
-                            <h3>{spot.avgRating}</h3>
+                            <h3>New Spot!</h3>
                         )}
                     </div>
+
                     {spot.numReviews === 0 ? (
                         <h3 className="reviews">No reviews yet</h3>
                     ) : spot.numReviews === 1 ? (
                         <h3 className="reviews">{`${spot.numReviews} review`}</h3>
-                    ) : (
+                    ) : spot.NumReviews > 1 ? (
                         <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
-                    )}
-                    {spot && user && user.id !== spot.ownerId ? (
-                        <button>Add Review</button>
+                    ) : null}
+                    {spot &&
+                    user &&
+                    user.id !== spot.ownerId &&
+                    !userHasReviewed ? (
+                        <button className="add-review-button">
+                            <OpenModalMenuItem
+                                itemText="Add Review"
+                                modalComponent={<ReviewModal spotId={spotId} />}
+                            />
+                        </button>
                     ) : null}
                 </div>
                 {reviews.reviews && reviews.reviews.length > 0 ? (
@@ -177,13 +170,25 @@ const SpotById = () => {
                         .slice()
                         .sort(
                             (a, b) =>
-                                new Date(a.createdAt) - new Date(b.createdAt)
+                                new Date(b.createdAt) - new Date(a.createdAt)
                         )
                         .map((review) => (
                             <div key={review.id} className="reviewCard">
                                 <h3>{review.User.firstName}</h3>
                                 <span>{formatDate(review.createdAt)}</span>
                                 <h4>{review.review}</h4>
+                                {user && user.id === review.userId ? (
+                                    <button id="delete-review-button">
+                                        <OpenModalMenuItem
+                                            itemText="Delete"
+                                            modalComponent={
+                                                <DeleteReviewModal
+                                                    reviewId={review.id}
+                                                />
+                                            }
+                                        />
+                                    </button>
+                                ) : null}
                             </div>
                         ))
                 ) : (

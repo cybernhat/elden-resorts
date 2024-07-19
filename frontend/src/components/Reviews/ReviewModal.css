@@ -1,0 +1,20 @@
+.star-rating-container {
+    display: flex;
+    align-items: center;
+}
+
+.star {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.star.selected {
+    color: #f5a623;
+}
+
+input[type="range"] {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
