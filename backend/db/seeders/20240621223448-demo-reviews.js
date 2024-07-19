@@ -79,7 +79,7 @@ module.exports = {
       },
       {
         spotId: 6,
-        userId: 1,
+        userId: 3,
         review: "Had a pleasant stay at this spot. The location was convenient and the spot had everything needed for a comfortable stay. Would recommend!",
         stars: 4
       },
