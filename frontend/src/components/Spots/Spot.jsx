@@ -21,9 +21,7 @@ const Spots = () => {
                     spot && spot.id ? (
                         <li id="spot-item" key={spot.id}>
                             <NavLink to={`/spots/${spot.id}`} className="tooltip">
-                            <h1>
-                            {spot.name}
-                            </h1>
+                                <h1>{spot.name}</h1>
                             </NavLink>
                             <NavLink id="nav-link" to={`/spots/${spot.id}`}>
                                 <img
@@ -36,9 +34,9 @@ const Spots = () => {
                                     <div className="star-rating">
                                         <GiJusticeStar id="star-icon" />
                                         <h2>
-                                            {typeof spot.avgRating === "number"
-                                                ? spot.avgRating.toFixed(1)
-                                                : "New Spot!"}
+                                            {isNaN(spot.avgRating) || spot.avgRating === null
+                                                ? "New Spot!"
+                                                : spot.avgRating.toFixed(1)}
                                         </h2>
                                     </div>
                                 </div>
