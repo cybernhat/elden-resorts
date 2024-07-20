@@ -36,10 +36,12 @@ const Spots = () => {
                                     <h2>{`${spot.city}, ${spot.state}`}</h2>
                                     <div className="star-rating">
                                         <GiJusticeStar id="star-icon" />
-                                        {spot &&
-                                        spot.avgRating !== null &&
-                                        spot.avgRating !== undefined ? (
-                                            <h2>{spot.avgRating.toFixed(1)}</h2>
+                                        {spot && spot.avgRating != null ? (
+                                            <h2>
+                                                {parseFloat(
+                                                    spot.avgRating
+                                                ).toFixed(1)}
+                                            </h2>
                                         ) : (
                                             <h2>New Spot!</h2>
                                         )}
