@@ -39,7 +39,7 @@
   top: 0; /* Position the tooltip on top of the image */
   left: 0; /* Align to the left of the image */
   width: 96%;
-  height: 74.5%;
+  height: 72%;
   background-color: rgba(0, 0, 0, 0.6); /* Translucent grey background */
   color: #fff;
   display: flex;

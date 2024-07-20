@@ -1,5 +1,5 @@
 .profile-dropdown {
-  position: absolute;
+  position: relative;
 }
 
 .hidden {
@@ -21,4 +21,3 @@
   height: 100px;
   background-color: #201D1D;
 }
-

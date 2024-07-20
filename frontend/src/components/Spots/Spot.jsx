@@ -14,6 +14,19 @@ const Spots = () => {
         dispatch(fetchAllSpots());
     }, [dispatch]);
 
+    const getImageUrl = (previewImage) => {
+        if (typeof previewImage === "string") {
+            return previewImage;
+        } else if (Array.isArray(previewImage) && previewImage.length > 0) {
+            const previewImgObj = previewImage.find((img) => img.preview);
+            return previewImgObj ? previewImgObj.url : "";
+        }
+        return "";
+    };
+
+    if (spots) {
+        console.log("SPOTS", spots[0]);
+    }
     return (
         <div>
             <ul id="spot-list">
@@ -27,11 +40,21 @@ const Spots = () => {
                                 <h1>{spot.name}</h1>
                             </NavLink>
                             <NavLink id="nav-link" to={`/spots/${spot.id}`}>
-                                <img
-                                    className="spot-image"
-                                    src={spot.previewImage}
-                                    alt={`${spot.name} preview`}
-                                />
+                                {spot && spot.previewImage ? (
+                                    <img
+                                        className="spot-image"
+                                        src={getImageUrl(spot.previewImage)}
+                                        alt={`${spot.name} preview`}
+                                    />
+                                ) : spot && spot.previewImages ? (
+                                    <img
+                                        className="spot-image"
+                                        src={getImageUrl(
+                                            spot.previewImages[0].url
+                                        )}
+                                        alt={`${spot.name} preview`}
+                                    />
+                                ) : null}
                                 <div className="info">
                                     <h2>{`${spot.city}, ${spot.state}`}</h2>
                                     <div className="star-rating">

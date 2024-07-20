@@ -1,3 +1,8 @@
+:root {
+    --text-color: #9d723a;
+    --background-color: #201d1d;
+  }
+
 * {
     margin: 0;
     padding: 0;
@@ -11,7 +16,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #201D1D;
+    background-color: var(--background-color);
     overflow-x: hidden;
 }
 
@@ -32,13 +37,6 @@ body {
 h1, h2, h3, h4,span {
     color: var(--text-color);
     margin-top: 10px;
-  }
-
-  h3 {
     font-weight: normal;
-  }
-
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
+     font-family: 'MedievalSharp'
   }

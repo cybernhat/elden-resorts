@@ -29,7 +29,7 @@
 #spot-creator {
     font-size: 30px;
     text-decoration: none;
-    color: #ef8b09;
+    color: var(--text-color);
 }
 
 #spot-creator:hover {

@@ -19,8 +19,8 @@ const SpotById = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchSpotById(spotId))
-        dispatch(fetchReviews(spotId))
+        dispatch(fetchSpotById(spotId));
+        dispatch(fetchReviews(spotId));
     }, [dispatch, spotId]);
 
     useEffect(() => {
@@ -77,30 +77,19 @@ const SpotById = () => {
                         />
                     ) : null}
                     <div className="sub-images-container">
-                        {spot.previewImages && spot.previewImages[1] ? (
-                            <img
-                                src={spot.previewImages[1].url}
-                                className="sub-images"
-                            />
-                        ) : null}
-                        {spot.previewImages && spot.previewImages[2] ? (
-                            <img
-                                src={spot.previewImages[2].url}
-                                className="sub-images"
-                            />
-                        ) : null}
-                        {spot.previewImages && spot.previewImages[3] ? (
-                            <img
-                                src={spot.previewImages[3].url}
-                                className="sub-images"
-                            />
-                        ) : null}
-                        {spot.previewImages && spot.previewImages[4] ? (
-                            <img
-                                src={spot.previewImages[4].url}
-                                className="sub-images"
-                            />
-                        ) : null}
+                        {spot.previewImages &&
+                            spot.previewImages
+                                .slice(1, 5)
+                                .map((image, index) =>
+                                    image.url ? (
+                                        <img
+                                            key={index}
+                                            src={image.url}
+                                            className="sub-images"
+                                            alt={`Spot sub-image ${index + 1}`}
+                                        />
+                                    ) : null
+                                )}
                     </div>
                 </div>
                 <div id="description-reserve-container">
@@ -120,7 +109,7 @@ const SpotById = () => {
                             <div id="rating-container">
                                 {typeof spot.avgRating === "number" ? (
                                     <div className="reserve-star">
-                                        <GiJusticeStar className='spot-star-icon'/>
+                                        <GiJusticeStar className="spot-star-icon" />
                                         <h3>{spot.avgRating.toFixed(1)}</h3>
                                     </div>
                                 ) : (
@@ -150,7 +139,7 @@ const SpotById = () => {
                 <div id="review-heading">
                     <div id="review-rating-container">
                         {typeof spot.avgRating === "number" ? (
-                            <div id='review-star-container'>
+                            <div id="review-star-container">
                                 <GiJusticeStar className="star-icon" />
                                 <h3>{spot.avgRating.toFixed(1)}</h3>
                             </div>

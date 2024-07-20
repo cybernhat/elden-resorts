@@ -211,7 +211,17 @@ const spotReducer = (state = initialState, action) => {
             return newState;
         }
         case POST_SPOT_IMAGES: {
-            return { ...state, [action.payload.id]: action.image };
+            const newState = { ...state };
+            const spotId = action.payload.spotId;
+            const spot = newState[spotId] || {};
+            const images = spot.images || [];
+            return {
+                ...newState,
+                [spotId]: {
+                    ...spot,
+                    images: [...images, action.payload],
+                }
+            };
         }
         default:
             return state;

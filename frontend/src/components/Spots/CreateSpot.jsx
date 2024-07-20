@@ -10,17 +10,17 @@ const CreateSpot = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [name, setName] = useState("");
-    const [country, setCountry] = useState("");
-    const [address, setAddress] = useState("");
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
-    const [latitude, setLatitude] = useState("");
-    const [longitude, setLongitude] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState(0);
-    const [mainImageUrl, setMainImageUrl] = useState("");
-    const [imageUrl1, setImageUrl1] = useState("");
+    const [name, setName] = useState("Name");
+    const [country, setCountry] = useState("Country");
+    const [address, setAddress] = useState("Address");
+    const [city, setCity] = useState("City");
+    const [state, setState] = useState("State");
+    const [latitude, setLatitude] = useState(1);
+    const [longitude, setLongitude] = useState(1);
+    const [description, setDescription] = useState("Description. Should be more than 30 characters. I love elden ring.");
+    const [price, setPrice] = useState(1);
+    const [mainImageUrl, setMainImageUrl] = useState("https://hauntedbnb.s3.us-east-2.amazonaws.com/Spot+01/Gemini_Generated_Image_q2zyk6q2zyk6q2zy.jpg");
+    const [imageUrl1, setImageUrl1] = useState("https://hauntedbnb.s3.us-east-2.amazonaws.com/Spot+01/Gemini_Generated_Image_q2zyk6q2zyk6q2zy.jpg");
     const [imageUrl2, setImageUrl2] = useState("");
     const [imageUrl3, setImageUrl3] = useState("");
     const [imageUrl4, setImageUrl4] = useState("");
@@ -44,8 +44,8 @@ const CreateSpot = () => {
             formErrors.mainImageUrl = "Main Image URL is required";
 
         // technical errors
-        if (description.length <= 30)
-            formErrors.description = "Description is too short";
+        if (description.length <= 30) formErrors.description = "Description is too short";
+        if (price === 0) formErrors.price = ('Spot cannot be free');
 
         setErrors(formErrors);
     }, [
