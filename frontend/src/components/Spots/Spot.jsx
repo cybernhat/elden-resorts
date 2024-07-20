@@ -39,7 +39,7 @@ const Spots = () => {
                                         {spot &&
                                         spot.avgRating !== null &&
                                         spot.avgRating !== undefined ? (
-                                            <h2>{spot.avgRating}</h2>
+                                            <h2>{spot.avgRating.toFixed(1)}</h2>
                                         ) : (
                                             <h2>New Spot!</h2>
                                         )}
