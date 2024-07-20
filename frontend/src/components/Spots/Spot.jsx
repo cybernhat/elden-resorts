@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllSpots } from "../../store/spot";
 import "./Spot.css";
-import { NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { GiJusticeStar } from "react-icons/gi";
 
 const Spots = () => {
@@ -20,10 +20,11 @@ const Spots = () => {
                 {spots.map((spot) =>
                     spot && spot.id ? (
                         <li id="spot-item" key={spot.id}>
-                            <NavLink to={`/spots/${spot.id}`} className="tooltip">
-                            <h1>
-                            {spot.name}
-                            </h1>
+                            <NavLink
+                                to={`/spots/${spot.id}`}
+                                className="tooltip"
+                            >
+                                <h1>{spot.name}</h1>
                             </NavLink>
                             <NavLink id="nav-link" to={`/spots/${spot.id}`}>
                                 <img
@@ -35,7 +36,13 @@ const Spots = () => {
                                     <h2>{`${spot.city}, ${spot.state}`}</h2>
                                     <div className="star-rating">
                                         <GiJusticeStar id="star-icon" />
-                                        {spot && <h2>{spot.avgRating}</h2>}
+                                        {spot &&
+                                        spot.avgRating !== null &&
+                                        spot.avgRating !== undefined ? (
+                                            <h2>{spot.avgRating}</h2>
+                                        ) : (
+                                            <h2>New Spot!</h2>
+                                        )}
                                     </div>
                                 </div>
                                 <h3>ᚠ {spot.price} runes per night</h3>
