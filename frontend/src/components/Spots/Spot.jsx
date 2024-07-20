@@ -14,7 +14,6 @@ const Spots = () => {
         dispatch(fetchAllSpots());
     }, [dispatch]);
 
-    console.log('hello', spots[0].avgRating)
     return (
         <div>
             <ul id="spot-list">
@@ -36,12 +35,10 @@ const Spots = () => {
                                     <h2>{`${spot.city}, ${spot.state}`}</h2>
                                     <div className="star-rating">
                                         <GiJusticeStar id="star-icon" />
-                                        <h2>{spot && spot.avgRating}</h2>
-                                        {/* <h2>
-                                            {typeof spot.avgRating === "number"
-                                                ? spot.avgRating?.toFixed(1)
-                                                : "New Spot!"}
-                                        </h2> */}
+                                        {spot && typeof spot.avgRating == 'number'
+                                        ? <h2>{spot.avgRating.toFixed(1)}</h2>
+                                        : <h2> New Spot!</h2>
+                                       }
                                     </div>
                                 </div>
                                 <h3>ᚠ {spot.price} runes per night</h3>
