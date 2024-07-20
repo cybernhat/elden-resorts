@@ -35,10 +35,7 @@ const Spots = () => {
                                     <h2>{`${spot.city}, ${spot.state}`}</h2>
                                     <div className="star-rating">
                                         <GiJusticeStar id="star-icon" />
-                                        {spot && typeof spot.avgRating == 'number'
-                                        ? <h2>{spot.avgRating.toFixed(1)}</h2>
-                                        : <h2> New Spot!</h2>
-                                       }
+                                        {spot && <h2>{spot.avgRating}</h2>}
                                     </div>
                                 </div>
                                 <h3>ᚠ {spot.price} runes per night</h3>
