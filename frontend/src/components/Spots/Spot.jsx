@@ -24,9 +24,6 @@ const Spots = () => {
         return "";
     };
 
-    if (spots) {
-        console.log("SPOTS", spots[0]);
-    }
     return (
         <div>
             <ul id="spot-list">

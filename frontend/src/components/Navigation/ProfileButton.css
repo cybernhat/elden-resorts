@@ -27,6 +27,16 @@
 }
 
 #spot-creator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #spot-creator h3 {
+    padding-bottom: 20px;
+  }
+
+#spot-creator {
     font-size: 30px;
     text-decoration: none;
     color: var(--text-color);

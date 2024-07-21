@@ -48,7 +48,7 @@ function ProfileButton({ user }) {
             <div id="user-container">
                 {user && (
                     <NavLink id="spot-creator" to="/spots/create">
-                        Create a Spot
+                        <h3>Create a Spot</h3>
                     </NavLink>
                 )}
                 <button id="user-button" onClick={toggleMenu}>

@@ -100,18 +100,6 @@ const EditSpot = () => {
 
         const updatedSpot = await dispatch(editSpot(spotBody, spotToUpdate.id));
 
-        // let imageBody = [
-        //     { spotId: updatedSpot.id, preview: true, url: mainImageUrl },
-        //     { spotId: updatedSpot.id, preview: false, url: imageUrl1 },
-        //     { spotId: updatedSpot.id, preview: false, url: imageUrl2 },
-        //     { spotId: updatedSpot.id, preview: false, url: imageUrl3 },
-        //     { spotId: updatedSpot.id, preview: false, url: imageUrl4 },
-        // ];
-
-        // await Promise.all(
-        //     imageBody.map((image) => dispatch(createSpotImages(image)))
-        // )
-
         navigate(`/spots/${updatedSpot.id}`, { replace: true});
     };
 
