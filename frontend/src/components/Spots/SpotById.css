@@ -19,7 +19,10 @@
     border-bottom: 2px solid black;
   }
 
-
+#spot-name {
+  display: flex;
+  justify-content: center;
+}
   #images {
     display: flex;
     flex-direction: row; /* Layout main image and sub-images container horizontally */
@@ -56,12 +59,16 @@
     margin: 0; /* Remove any default margin */
 }
 
+#description-container h4 {
+  font-size: 20px;
+}
 #reserve-container {
   display: flex;
   flex-direction: column; /* Stack items vertically */
   width: 400px;
   align-items: center; /* Center items horizontally */
-  border: 2px solid #ef8b09;
+  border: 2px solid black;
+  background-color: #4C371C;
   border-radius: 10px;
   padding: 20px; /* Add padding to create space inside the container */
   box-sizing: border-box; /* Ensure padding is included in the total width and height */
@@ -75,12 +82,21 @@
     margin-bottom: 10px; /* Add space below the price-review container */
 }
 
+#price-review-container h3 {
+  color: black;
+  font-weight: bold;
+  margin-top: -10px;
+}
+
 #rating-container {
     display: flex;
     flex-direction: column; /* Stack rating elements vertically */
     align-items: flex-end; /* Align rating to the right */
 }
 
+#rating-container h3 {
+  color: black;
+}
 
 .review-dot {
     display: flex;
@@ -130,18 +146,33 @@
   gap: 3.5px;
 }
 
+.spot-star-icon {
+  padding-bottom: 15px;
+}
+
+
 .star-icon{
   margin-top: 10px;
   color: #ef8b09
 }
 
-.spot-star-icon {
-  margin-top: 7px;
-  color:#ef8b09;
-}
 
 .add-review-button {
   margin-top: 10px;
   width: 150px;
   height: 25px;
+}
+
+.reserve-button {
+  width: 50%;
+  background-color: var(--text-color)
+}
+
+.add-review-button {
+  color: black;
+  background-color: var(--text-color);
+  border-radius: 10px;
+  width: 110px;
+  height: 30px;
+  font-size: 17px;
 }

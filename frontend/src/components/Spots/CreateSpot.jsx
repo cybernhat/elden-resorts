@@ -228,7 +228,7 @@ const CreateSpot = () => {
                         rank higher in search results
                     </h3>
                 </div>
-                <label htmlFor="price">$</label>
+                <label htmlFor="price">ᚠ</label>
                 <input
                     placeholder="Price per night (USD)"
                     type="number"

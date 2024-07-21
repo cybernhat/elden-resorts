@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {fetchSpotById, editSpot } from '../../store/spot'
-import { createSpotImages } from "../../store/spot";
+// import { createSpotImages } from "../../store/spot";
 
 const EditSpot = () => {
     const { spotId } = useParams();
@@ -100,17 +100,17 @@ const EditSpot = () => {
 
         const updatedSpot = await dispatch(editSpot(spotBody, spotToUpdate.id));
 
-        let imageBody = [
-            { spotId: updatedSpot.id, preview: true, url: mainImageUrl },
-            { spotId: updatedSpot.id, preview: false, url: imageUrl1 },
-            { spotId: updatedSpot.id, preview: false, url: imageUrl2 },
-            { spotId: updatedSpot.id, preview: false, url: imageUrl3 },
-            { spotId: updatedSpot.id, preview: false, url: imageUrl4 },
-        ];
+        // let imageBody = [
+        //     { spotId: updatedSpot.id, preview: true, url: mainImageUrl },
+        //     { spotId: updatedSpot.id, preview: false, url: imageUrl1 },
+        //     { spotId: updatedSpot.id, preview: false, url: imageUrl2 },
+        //     { spotId: updatedSpot.id, preview: false, url: imageUrl3 },
+        //     { spotId: updatedSpot.id, preview: false, url: imageUrl4 },
+        // ];
 
-        await Promise.all(
-            imageBody.map((image) => dispatch(createSpotImages(image)))
-        )
+        // await Promise.all(
+        //     imageBody.map((image) => dispatch(createSpotImages(image)))
+        // )
 
         navigate(`/spots/${updatedSpot.id}`, { replace: true});
     };
@@ -254,7 +254,7 @@ const EditSpot = () => {
                 />
                 {hasSubmitted && errors.price && <span>{errors.price}</span>}
             </div>
-            <div className="photo-info">
+            {/* <div className="photo-info">
                 <div className="photo-guide">
                     <h2>Liven up your spot with photos</h2>
                     <h3>
@@ -298,7 +298,7 @@ const EditSpot = () => {
                         onChange={(e) => setImageUrl4(e.target.value)}
                     />
                 </div>
-            </div>
+            </div> */}
             <button type="submit" className="submit-button">
                 Update Spot
             </button>

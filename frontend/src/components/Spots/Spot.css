@@ -14,7 +14,7 @@
   .spot-image {
     position: relative; /* Ensures the image is positioned for the tooltip */
     width: 500px; /* Adjust as needed */
-    height: 300px; /* Adjust as needed */
+    height: 320px; /* Adjust as needed */
     padding: 0;
     border: 2px solid black;
     box-sizing: border-box;
@@ -23,7 +23,7 @@
 #spot-list {
     display: flex;
     flex-wrap: wrap;
-
+    justify-content: center;
 }
 
 #spot-item {

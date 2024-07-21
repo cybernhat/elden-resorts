@@ -1,5 +1,5 @@
 #user-button {
-    background: #ef8b09;
+    background: var(--text-color);
     border-radius: 20px;
     margin-right: 50px;
 }

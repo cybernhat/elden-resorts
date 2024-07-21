@@ -64,7 +64,7 @@ const SpotById = () => {
     return (
         <div id="container">
             <div id="spot-card">
-                <h1>{spot.name}</h1>
+                <h1 id='spot-name'>{spot.name}</h1>
                 <h2>
                     {spot.city}, {spot.state}, {spot.country}
                 </h2>
@@ -104,7 +104,7 @@ const SpotById = () => {
                     <div id="reserve-container">
                         <div id="price-review-container">
                             <h3 className="price-night">
-                                ᚠ{spot.price} per night
+                                ᚠ {spot.price} per night
                             </h3>
                             <div id="rating-container">
                                 {typeof spot.avgRating === "number" ? (
@@ -118,8 +118,7 @@ const SpotById = () => {
                             </div>
                             {spot.numReviews === "no reviews yet" ? null : (
                                 <div className="review-dot">
-                                    <h3>•</h3>
-                                    <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
+                                    <h3 className="reviews">{`• ${spot.numReviews} reviews`}</h3>
                                 </div>
                             )}
                         </div>
@@ -150,9 +149,9 @@ const SpotById = () => {
                     {spot.numReviews === 0 ? (
                         <h3 className="reviews">No reviews yet</h3>
                     ) : spot.numReviews === 1 ? (
-                        <h3 className="reviews">{`${spot.numReviews} review`}</h3>
+                        <h3 className="reviews">{`• ${spot.numReviews} review`}</h3>
                     ) : spot.numReviews > 1 ? (
-                        <h3 className="reviews">{`${spot.numReviews} reviews`}</h3>
+                        <h3 className="reviews">{`• ${spot.numReviews} reviews`}</h3>
                     ) : null}
                     {spot &&
                     user &&

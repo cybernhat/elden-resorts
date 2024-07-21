@@ -34,9 +34,9 @@ body {
     flex: 1; /* Make #root take up the remaining space in the body */
 }
 
-h1, h2, h3, h4,span {
+h1, h2, h3, h4, span, a, p {
     color: var(--text-color);
     margin-top: 10px;
     font-weight: normal;
-     font-family: 'MedievalSharp'
+    font-family: 'MedievalSharp'
   }
