@@ -13,6 +13,7 @@
 }
 
 #user-container {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,3 +40,32 @@
     text-decoration: underline;
 }
 
+#manage-spot-button {
+    width: 150px;
+    height: 30px;
+    border-radius: 10px;
+}
+#manage-spot-button a {
+    font-size: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+#logout-button {
+    width: 100px;
+    height: 30px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+#logout-button a {
+    font-size: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+.login-signup-button:hover {
+    cursor: pointer
+}

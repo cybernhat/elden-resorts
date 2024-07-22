@@ -103,6 +103,9 @@ form {
   .submit-button {
     border: 2px solid black;
     border-radius: 10px;
+    font-family: 'MedievalSharp';
+    color: black;
+    font-weight: bold;
   }
 
   .submit-button:hover {

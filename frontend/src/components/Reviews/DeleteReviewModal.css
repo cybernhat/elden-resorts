@@ -1,0 +1,16 @@
+.delete-modal h2, .delete-modal h3 {
+    color: black;
+    font-weight: bold;
+}
+
+.delete-button {
+    font-family: 'MedievalSharp';
+    color: black;
+    font-weight: bold;
+}
+
+.keep-button {
+    font-family: 'MedievalSharp';
+    color: black;
+    font-weight: bold;
+}

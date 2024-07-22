@@ -143,6 +143,7 @@
 
 #reviews-card {
   padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 #review-star-container{
@@ -181,4 +182,18 @@
   width: 110px;
   height: 30px;
   font-size: 17px;
+}
+
+.add-review-button:hover {
+  cursor: pointer;
+  box-shadow: 0 0 5px 2px grey;
+}
+
+#delete-review-button {
+  margin-top: 5px;
+  width: 70px;
+  height: 25px;
+  background-color: var(--text-color);
+  font-weight: bold;
+  border-radius: 10px;
 }

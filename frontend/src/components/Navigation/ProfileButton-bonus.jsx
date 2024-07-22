@@ -61,26 +61,26 @@ function ProfileButton({ user }) {
                         <li>Hello, {user.firstName}!</li>
                         <li>{user.email}</li>
                         <li>
-                            <button>
+                            <button id='manage-spot-button'>
                                 <Link to="/spots/manage">Manage Spots</Link>
                             </button>
                         </li>
                         <li>
-                            <button onClick={logout}>
+                            <button id='logout-button' onClick={logout}>
                                 <Link to="/">Log Out</Link>
                             </button>
                         </li>
                     </div>
                 ) : (
                     <>
-                        <button>
+                        <button className='login-signup-button'>
                             <OpenModalMenuItem
                                 itemText="Log In"
                                 onItemClick={closeMenu}
                                 modalComponent={<LoginFormModal />}
                             />
                         </button>
-                        <button>
+                        <button className='login-signup-button'>
                             <OpenModalMenuItem
                                 itemText="Sign Up"
                                 onItemClick={closeMenu}

@@ -175,7 +175,7 @@ const SpotById = () => {
                                     new Date(a.createdAt)
                             )
                             .map((review) => (
-                                <div key={review.id} className="reviewCard">
+                                <div key={review.id} id="review-card">
                                     <h3>
                                         {review.User?.firstName || "Anonymous"}
                                     </h3>

@@ -55,9 +55,9 @@ function SignupFormModal() {
   };
 
   return (
-    <>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
+    <div className='modal-container'>
+      <h1 id='login-word'>Sign Up</h1>
+      <form className='modal-form' onSubmit={handleSubmit}>
         <label>
           Email
           <input
@@ -118,9 +118,9 @@ function SignupFormModal() {
           />
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit" disabled={Object.keys(signUpErrors).length}>Sign Up</button>
+        <button id='submit-button' type="submit" disabled={Object.keys(signUpErrors).length}>Sign Up</button>
       </form>
-    </>
+    </div>
   );
 }
 

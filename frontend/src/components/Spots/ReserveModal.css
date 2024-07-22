@@ -1,0 +1,22 @@
+#reserve-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 20px;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    
+}
+#reserve-modal button {
+    width: 150px;
+    height: 30px;
+    border-radius: 10px;
+    font-family: 'MedievalSharp';
+    font-weight: bold;
+}

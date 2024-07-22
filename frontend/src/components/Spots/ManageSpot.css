@@ -28,7 +28,7 @@
 }
 
 #button-container:hover {
-    text-decoration: underline;
+    box-shadow: 0 0 5px 2px grey;
 }
 .manage-link {
     display: inline-block; /* or block, depending on your layout needs */
@@ -47,7 +47,7 @@
 
 .manage-button:hover {
     cursor: pointer;
-    text-decoration: underline
+    box-shadow: 0 0 5px 2px grey;
 }
 .manage-button li {
     color: black;

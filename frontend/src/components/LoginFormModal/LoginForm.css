@@ -1,0 +1,48 @@
+.modal-container {
+    background: var(--form-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+}
+
+#login-word{
+    color: black;
+    font-weight: bold;
+}
+#modal-content{
+    background-color: var(--form-color);
+    border-radius: 10px;
+    border: 2px solid black;
+}
+.modal-form {
+    background-color: var(--form-color)
+}
+
+.modal-form label {
+    color: black;
+}
+
+.modal-container button {
+    width: 150px;
+    height: 30px;
+    border-radius: 10px;
+    font-family: 'MedievalSharp';
+    font-weight: bold;
+}
+
+#demo-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#submit-button {
+    margin-left: 91px;
+}
+
+#submit-button:hover {
+    cursor: pointer;
+}
+
+#demo-button:hover {
+    cursor: pointer;
+}

@@ -53,9 +53,9 @@ function LoginFormModal() {
 
 
   return (
-    <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
+    <div className='modal-container'>
+      <h1 id='login-word'>Log In</h1>
+      <form className='modal-form' onSubmit={handleSubmit}>
         <label>
           Username or Email
           <input
@@ -75,10 +75,10 @@ function LoginFormModal() {
           />
         </label>
         {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit" disabled={Object.keys(loginErrors).length}>Log In</button>
+        <button id='submit-button' type="submit" disabled={Object.keys(loginErrors).length}>Log In</button>
       </form>
-      <button type='button' onClick={handleDemoLogin}>Demo User Login</button>
-    </>
+      <button id='demo-button' type='button' onClick={handleDemoLogin}>Demo User Login</button>
+    </div>
   );
 }
 
