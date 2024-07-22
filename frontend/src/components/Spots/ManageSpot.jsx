@@ -58,14 +58,17 @@ const ManageSpot = () => {
                                     <div className="info">
                                         <h2>{`${spot.city}, ${spot.state}`}</h2>
                                         <div className="star-rating">
-                                            <GiJusticeStar id="star-icon" />
-                                            {typeof spot.avgRating ===
-                                            "number" ? (
-                                                <h2>{spot.avgRating}</h2>
-                                            ) : (
-                                                <h2>New Spot!</h2>
-                                            )}
-                                        </div>
+                                        <GiJusticeStar id="star-icon" />
+                                        {spot && spot.avgRating != null ? (
+                                            <h2>
+                                                {parseFloat(
+                                                    spot.avgRating
+                                                ).toFixed(1)}
+                                            </h2>
+                                        ) : (
+                                            <h2>New Spot!</h2>
+                                        )}
+                                    </div>
                                     </div>
                                     <h3>ᚠ {spot.price} runes per night</h3>
                                 </NavLink>

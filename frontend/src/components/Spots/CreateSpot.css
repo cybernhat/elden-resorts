@@ -8,6 +8,14 @@ form {
     font-family: Arial, sans-serif;
   }
 
+#form{
+  background-color: var(--form-color);
+}
+
+#form h1,#form h2, #form h3, #form label {
+  color: black;
+  font-weight: bold
+}
   .location-info, .description-info, .title-info, .price-info, .photo-info {
     margin-bottom: 20px;
   }
@@ -90,4 +98,13 @@ form {
     .city-state div, .lat-lng div {
       width: 100%;
     }
+  }
+
+  .submit-button {
+    border: 2px solid black;
+    border-radius: 10px;
+  }
+
+  .submit-button:hover {
+    box-shadow: 0 0 5px 2px grey;
   }

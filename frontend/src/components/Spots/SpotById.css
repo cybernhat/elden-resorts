@@ -119,6 +119,11 @@
   border-radius: 5px;
 }
 
+.reserve-button:hover {
+  box-shadow: 0 0 5px 2px grey;
+  cursor: pointer;
+}
+
 #review-heading {
   display: flex;
   flex-direction: column;

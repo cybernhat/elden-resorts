@@ -4,6 +4,7 @@ import { GiJusticeStar } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { postReview } from "../../store/review";
 import { useModal } from '../../context/Modal';
+import { fetchReviews } from "../../store/review";
 
 const ReviewModal = ( {spotId} ) => {
     const { closeModal } = useModal();
@@ -45,6 +46,7 @@ const ReviewModal = ( {spotId} ) => {
 
         const newReview = await dispatch(postReview(spotId, reviewBody));
         if (newReview) {
+            dispatch(fetchReviews(spotId)); // Refresh reviews
             closeModal();
         }
     };

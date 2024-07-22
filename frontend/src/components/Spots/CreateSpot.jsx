@@ -10,17 +10,17 @@ const CreateSpot = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [name, setName] = useState("Name");
-    const [country, setCountry] = useState("Country");
-    const [address, setAddress] = useState("Address");
-    const [city, setCity] = useState("City");
-    const [state, setState] = useState("State");
-    const [latitude, setLatitude] = useState(1);
-    const [longitude, setLongitude] = useState(1);
-    const [description, setDescription] = useState("Description. Should be more than 30 characters. I love elden ring.");
+    const [name, setName] = useState("");
+    const [country, setCountry] = useState("");
+    const [address, setAddress] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+    const [latitude, setLatitude] = useState();
+    const [longitude, setLongitude] = useState();
+    const [description, setDescription] = useState("");
     const [price, setPrice] = useState(1);
-    const [mainImageUrl, setMainImageUrl] = useState("https://hauntedbnb.s3.us-east-2.amazonaws.com/Spot+01/Gemini_Generated_Image_q2zyk6q2zyk6q2zy.jpg");
-    const [imageUrl1, setImageUrl1] = useState("https://hauntedbnb.s3.us-east-2.amazonaws.com/Spot+01/Gemini_Generated_Image_q2zyk6q2zyk6q2zy.jpg");
+    const [mainImageUrl, setMainImageUrl] = useState("");
+    const [imageUrl1, setImageUrl1] = useState("");
     const [imageUrl2, setImageUrl2] = useState("");
     const [imageUrl3, setImageUrl3] = useState("");
     const [imageUrl4, setImageUrl4] = useState("");
@@ -39,13 +39,34 @@ const CreateSpot = () => {
         if (!latitude) formErrors.latitude = "Latitude is required";
         if (!longitude) formErrors.longitude = "Longitude is required";
         if (!description) formErrors.description = "Description is required";
-        if (!price) formErrors.price = "Price is required";
+        if (!price) {
+            formErrors.price = "Price is required";
+        } else if (parseFloat(price) <= 0) {
+            formErrors.price = "Spot cannot be free";
+        }
+
         if (!mainImageUrl)
             formErrors.mainImageUrl = "Main Image URL is required";
 
         // technical errors
-        if (description.length <= 30) formErrors.description = "Description is too short";
-        if (price === 0) formErrors.price = ('Spot cannot be free');
+        if (description.length <= 30)
+            formErrors.description = "Description is too short";
+
+        // Convert latitude and longitude to numbers
+        const latNumber = parseFloat(latitude);
+        const lngNumber = parseFloat(longitude);
+
+        if (latNumber < -90 || latNumber > 90)
+            formErrors.latitude = "Invalid latitude";
+        if (lngNumber < -180 || lngNumber > 180)
+            formErrors.longitude = "Invalid longitude";
+        if (isNaN(latNumber)) {
+            formErrors.latitude = "Please enter a valid number";
+        }
+
+        if (isNaN(lngNumber)) {
+            formErrors.longitude = "Please enter a valid number";
+        }
 
         setErrors(formErrors);
     }, [
@@ -65,21 +86,23 @@ const CreateSpot = () => {
         e.preventDefault();
         setHasSubmitted(true);
 
-        if (Object.keys(errors).length > 0) {
-            return;
-        }
+        if (Object.keys(errors).length > 0) return;
+
+        // Convert latitude and longitude to numbers
+        const latNumber = parseFloat(latitude);
+        const lngNumber = parseFloat(longitude);
 
         const spotBody = {
             ownerId: currUser.id,
-            name: name,
-            country: country,
-            address: address,
-            city: city,
-            state: state,
-            lat: latitude,
-            lng: longitude,
-            description: description,
-            price: price,
+            name,
+            country,
+            address,
+            city,
+            state,
+            lat: latNumber,
+            lng: lngNumber,
+            description,
+            price,
         };
 
         let createdSpot = await dispatch(postSpot(spotBody));
@@ -100,7 +123,7 @@ const CreateSpot = () => {
     };
 
     return (
-        <form id="create-form" onSubmit={handleSubmit}>
+        <form id="form" onSubmit={handleSubmit}>
             <h1> Create a new Spot</h1>
             <div className="location-info">
                 <div className="location-guide">

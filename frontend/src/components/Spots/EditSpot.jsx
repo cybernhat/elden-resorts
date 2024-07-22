@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {fetchSpotById, editSpot } from '../../store/spot'
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSpotById, editSpot } from "../../store/spot";
 // import { createSpotImages } from "../../store/spot";
 
 const EditSpot = () => {
     const { spotId } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const currUser = useSelector(state => state.session.user);
+    const currUser = useSelector((state) => state.session.user);
 
-    const spotToUpdate = useSelector(state => state.spots[spotId]);
+    const spotToUpdate = useSelector((state) => state.spots[spotId]);
 
     // State for form fields
-    const [name, setName] = useState('');
-    const [country, setCountry] = useState('');
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [latitude, setLatitude] = useState('');
-    const [longitude, setLongitude] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [mainImageUrl, setMainImageUrl] = useState('');
-    const [imageUrl1, setImageUrl1] = useState('');
-    const [imageUrl2, setImageUrl2] = useState('');
-    const [imageUrl3, setImageUrl3] = useState('');
-    const [imageUrl4, setImageUrl4] = useState('');
+    const [name, setName] = useState("");
+    const [country, setCountry] = useState("");
+    const [address, setAddress] = useState("");
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
+    const [description, setDescription] = useState("");
+    const [price, setPrice] = useState("");
+    const [mainImageUrl, setMainImageUrl] = useState("");
+    // const [imageUrl1, setImageUrl1] = useState("");
+    // const [imageUrl2, setImageUrl2] = useState("");
+    // const [imageUrl3, setImageUrl3] = useState("");
+    // const [imageUrl4, setImageUrl4] = useState("");
     const [errors, setErrors] = useState({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
@@ -48,10 +48,10 @@ const EditSpot = () => {
             setDescription(spotToUpdate.description);
             setPrice(spotToUpdate.price);
             setMainImageUrl("https://picsum.photos/300/300?random=1");
-            setImageUrl1("https://picsum.photos/300/300?random=2");
-            setImageUrl2("https://picsum.photos/300/300?random=3");
-            setImageUrl3("https://picsum.photos/300/300?random=4");
-            setImageUrl4("https://picsum.photos/300/300?random=5");
+            // setImageUrl1("https://picsum.photos/300/300?random=2");
+            // setImageUrl2("https://picsum.photos/300/300?random=3");
+            // setImageUrl3("https://picsum.photos/300/300?random=4");
+            // setImageUrl4("https://picsum.photos/300/300?random=5");
         }
     }, [spotToUpdate]);
 
@@ -59,31 +59,66 @@ const EditSpot = () => {
     useEffect(() => {
         let formErrors = {};
 
-        if (!name) formErrors.name = 'Name is required';
-        if (!country) formErrors.country = 'Country is required';
-        if (!address) formErrors.address = 'Address is required';
-        if (!city) formErrors.city = 'City is required';
-        if (!state) formErrors.state = 'State is required';
-        if (!latitude) formErrors.latitude = 'Latitude is required';
-        if (!longitude) formErrors.longitude = 'Longitude is required';
-        if (!description) formErrors.description = 'Description is required';
-        if (!price) formErrors.price = 'Price is required';
-        if (!mainImageUrl) formErrors.mainImageUrl = 'Main Image URL is required';
-        if (!imageUrl1) formErrors.imageUrl1 = 'Image URL 1 is required';
-        if (!imageUrl2) formErrors.imageUrl2 = 'Image URL 2 is required';
-        if (!imageUrl3) formErrors.imageUrl3 = 'Image URL 3 is required';
-        if (!imageUrl4) formErrors.imageUrl4 = 'Image URL 4 is required';
+        // error if field is empty
+        if (!name) formErrors.name = "Name is required";
+        if (!country) formErrors.country = "Country is required";
+        if (!address) formErrors.address = "Address is required";
+        if (!city) formErrors.city = "City is required";
+        if (!state) formErrors.state = "State is required";
+        if (!latitude) formErrors.latitude = "Latitude is required";
+        if (!longitude) formErrors.longitude = "Longitude is required";
+        if (!description) formErrors.description = "Description is required";
+        if (!price) {
+            formErrors.price = "Price is required";
+        } else if (parseFloat(price) <= 0) {
+            formErrors.price = "Spot cannot be free";
+        }
 
-        if (description.length <= 30) formErrors.description = 'Description is too short';
+        if (!mainImageUrl)
+            formErrors.mainImageUrl = "Main Image URL is required";
+
+        // technical errors
+        if (description.length <= 30)
+            formErrors.description = "Description is too short";
+
+        // Convert latitude and longitude to numbers
+        const latNumber = parseFloat(latitude);
+        const lngNumber = parseFloat(longitude);
+
+        if (latNumber < -90 || latNumber > 90 ) formErrors.latitude= 'Invalid latitude';
+        if (lngNumber < -180 || lngNumber > 180) formErrors.longitude= 'Invalid longitude';
+        if (isNaN(latNumber)) {
+            formErrors.latitude = "Please enter a valid number";
+        }
+
+        if (isNaN(lngNumber)) {
+            formErrors.longitude = "Please enter a valid number";
+        }
 
         setErrors(formErrors);
-    }, [name, country, address, city, state, latitude, longitude, description, price, mainImageUrl, imageUrl1, imageUrl2, imageUrl3, imageUrl4]);
+    }, [
+        name,
+        country,
+        address,
+        city,
+        state,
+        latitude,
+        longitude,
+        description,
+        price,
+        mainImageUrl,
+    ]);
 
-    const handleSubmit = async e => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setHasSubmitted(true);
 
         if (Object.keys(errors).length > 0) return;
+
+        // Convert latitude and longitude to numbers
+        const latNumber = parseFloat(latitude);
+        const lngNumber = parseFloat(longitude);
 
         const spotBody = {
             ownerId: currUser.id,
@@ -92,19 +127,19 @@ const EditSpot = () => {
             address,
             city,
             state,
-            lat: latitude,
-            lng: longitude,
+            lat: latNumber,
+            lng: lngNumber,
             description,
-            price
+            price,
         };
 
         const updatedSpot = await dispatch(editSpot(spotBody, spotToUpdate.id));
 
-        navigate(`/spots/${updatedSpot.id}`, { replace: true});
+        navigate(`/spots/${updatedSpot.id}`, { replace: true });
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form id='form' onSubmit={handleSubmit}>
             <h1> Update Spot</h1>
             <div className="location-info">
                 <div className="location-guide">
@@ -207,21 +242,22 @@ const EditSpot = () => {
                     <span>{errors.description}</span>
                 )}
             </div>
-            <div className='title-info'>
-                <div className='title-guide'>
+            <div className="title-info">
+                <div className="title-guide">
                     <h2>Create a title for your spot</h2>
-                    <h3>Catch guests&apos; attention with a spot title that highlights what makes your place special.</h3>
+                    <h3>
+                        Catch guests&apos; attention with a spot title that
+                        highlights what makes your place special.
+                    </h3>
                 </div>
                 <input
-                    placeholder='Name of your spot'
+                    placeholder="Name of your spot"
                     value={name}
-                    id='name'
-                    name='name'
-                    onChange={e => setName(e.target.value)}
+                    id="name"
+                    name="name"
+                    onChange={(e) => setName(e.target.value)}
                 />
-                {hasSubmitted && errors.name && (
-                    <span>{errors.name}</span>
-                )}
+                {hasSubmitted && errors.name && <span>{errors.name}</span>}
             </div>
             <div className="price-info">
                 <div className="price-guide">
@@ -231,9 +267,9 @@ const EditSpot = () => {
                         rank higher in search results
                     </h3>
                 </div>
-                <label htmlFor="price">$</label>
+                <label htmlFor="price">ᚠ</label>
                 <input
-                    placeholder='Price per night (USD)'
+                    placeholder="Price per night (USD)"
                     type="number"
                     value={price}
                     id="price"
@@ -291,7 +327,7 @@ const EditSpot = () => {
                 Update Spot
             </button>
         </form>
-    )
-}
+    );
+};
 
-export default EditSpot
+export default EditSpot;
