@@ -58,7 +58,10 @@
     padding-top: 20px; /* Remove any default padding */
     margin: 0; /* Remove any default margin */
 }
-
+#description-container {
+  width: 60%; /* Set the width to 50% of the parent container */
+  word-wrap: break-word; /* Ensure long words break and wrap to the next line */
+}
 #description-container h4 {
   font-size: 20px;
 }
