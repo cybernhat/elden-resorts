@@ -185,7 +185,7 @@ const SpotById = () => {
                                         <button id="delete-review-button">
                                             <OpenModalMenuItem
                                                 itemText="Delete"
-                                                modalComponent={
+                                                modalComponent={ 
                                                     <DeleteReviewModal
                                                         reviewId={review.id}
                                                     />

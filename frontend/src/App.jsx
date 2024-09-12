@@ -11,6 +11,7 @@ import SpotById from './components/Spots/SpotById';
 import CreateSpot from './components/Spots/CreateSpot';
 import ManageSpot from './components/Spots/ManageSpot';
 import EditSpot from './components/Spots/EditSpot';
+
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
