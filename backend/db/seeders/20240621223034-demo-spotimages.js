@@ -33,7 +33,7 @@ module.exports = {
       },
       {
         spotId: 5,
-        url: "https://tecmasters.com.br/wp-content/webp-express/webp-images/uploads/2022/03/IMG_1055-1-1024x576.jpg.webp",
+        url: "https://i.ytimg.com/vi/Hz00t6Pb2gQ/maxresdefault.jpg",
         preview: true
       },
       {
