@@ -3,7 +3,6 @@ const { Spot, Review, SpotImage, ReviewImage, User, Booking, Sequelize } = requi
 const { requireAuth } = require('../../utils/auth');
 const { Op } = require("sequelize")
 const dateTransformer = date => {
-    let transformedDate = ``
 
     let year = date.getFullYear();
     let month = date.getMonth();
