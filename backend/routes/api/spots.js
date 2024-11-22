@@ -18,7 +18,7 @@ router.get("/", async (req, res, next) => {
     const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
 
-    const errors = {};
+    const errors = {}
     if (page !== undefined) {
         if (isNaN(page) || page < 1) {
             errors.page = "Page must be greater than or equal to 1";
