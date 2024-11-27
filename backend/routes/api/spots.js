@@ -9,7 +9,7 @@ const dateTransformer = date => {
     let day = date.getDate();
     let hour = date.getHours();
     let minute = date.getMinutes();
-    let second = date.getSeconds();
+    let second = date.getSeconds()
 
     return transformedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`
 }
