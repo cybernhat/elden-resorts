@@ -21,7 +21,7 @@ router.get("/", async (req, res, next) => {
     const errors = {}
     if (page !== undefined) {
         if (isNaN(page) || page < 1) {
-            errors.page = "Page must be greater than or equal to 1";
+            errors.page = "Page must be greater than or equal to 1"
         }
     }
     if (size !== undefined) {
