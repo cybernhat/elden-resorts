@@ -26,7 +26,7 @@ router.get("/", async (req, res, next) => {
     }
     if (size !== undefined) {
         if (isNaN(size) || size < 1) {
-            errors.size = "Size must be greater than or equal to 1";
+            errors.size = "Size must be greater than or equal to 1"
         }
     }
     if (minLat !== undefined) {
