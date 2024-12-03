@@ -68,8 +68,8 @@ router.get("/", async (req, res, next) => {
     }
 
 
-    const pageNum = page || 1;
-    const pageSize = size || 20;
+    const pageNum = page || 1
+    const pageSize = size || 20
 
     const offset = (pageNum - 1) * pageSize;
     const limit = pageSize;
