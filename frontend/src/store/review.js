@@ -35,7 +35,7 @@ const resetReviews = () => {
         type: RESET_REVIEWS
     };
 };
-//thunks
+
 
 export const destroyReview = (reviewId) => async (dispatch) => {
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
