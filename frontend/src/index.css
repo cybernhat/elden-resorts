@@ -24,7 +24,7 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Ensure the body is at least the height of the viewport */
+    min-height: 100vh; 
 }
 
 #root {
@@ -32,7 +32,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    flex: 1; /* Make #root take up the remaining space in the body */
+    flex: 1;
 }
 
 h1, h2, h3, h4, span, a, p {
