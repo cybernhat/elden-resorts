@@ -280,7 +280,7 @@ router.post("/", requireAuth, async (req, res, next) => {
     if (!lng || isNaN(lng)) errors.lng = "Longitude is invalid";
     if (!name || name.length > 50) errors.name = "Name must be less than 50 characters";
     if (!description) errors.description = "Description is required";
-    if (!price || isNaN(price) || price < 0) errors.price = "Price per day is required and must be a number equal to or greater than 0";
+    if (!price || isNaN(price) || price < 0) errors.price = "Price per day is required and must be a number equal to or greater than 0"
 
     if (Object.keys(errors).length > 0) {
         res.status(400);
